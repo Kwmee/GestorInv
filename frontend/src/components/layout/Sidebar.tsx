@@ -20,7 +20,7 @@ export function Sidebar() {
   const { tema, toggleTema } = useThemeStore()
 
   return (
-    <aside className="w-60 min-h-screen bg-[#1e264a] dark:bg-black flex flex-col text-white border-r border-transparent dark:border-zinc-800">
+    <aside className="w-60 flex-shrink-0 bg-[#1e264a] dark:bg-black flex flex-col text-white border-r border-transparent dark:border-zinc-800">
       {/* Logo */}
       <div className="px-6 py-5 border-b border-white/10 dark:border-zinc-800">
         <h1 className="text-lg font-bold tracking-wide">GestorInventario</h1>
