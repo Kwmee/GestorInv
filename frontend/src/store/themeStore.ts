@@ -12,10 +12,12 @@ function aplicarTema(tema: Tema) {
   document.documentElement.classList.toggle('dark', tema === 'dark')
 }
 
+aplicarTema('dark')
+
 export const useThemeStore = create<ThemeState>()(
   persist(
     (set, get) => ({
-      tema: 'light',
+      tema: 'dark',
       toggleTema: () => {
         const nuevo: Tema = get().tema === 'light' ? 'dark' : 'light'
         aplicarTema(nuevo)

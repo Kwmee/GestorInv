@@ -37,10 +37,12 @@ function TarjetaEstado({
 export function Dashboard() {
   const navigate = useNavigate()
 
-  const { data, isLoading, error } = useQuery({
+  const { data, isLoading, error, refetch } = useQuery({
     queryKey: ['dashboard'],
     queryFn: dashboardApi.resumen,
     refetchInterval: 60_000,
+    retry: 5,
+    retryDelay: 3000,
   })
 
   if (isLoading) {
@@ -53,9 +55,17 @@ export function Dashboard() {
 
   if (error || !data) {
     return (
-      <div className="flex items-center gap-2 text-red-600 bg-red-50 dark:bg-red-900/20 dark:text-red-400 rounded-lg p-4">
-        <AlertCircle className="h-5 w-5" />
-        <span>Error al cargar el dashboard</span>
+      <div className="flex items-center justify-between bg-red-50 dark:bg-red-900/20 rounded-lg p-4">
+        <div className="flex items-center gap-2 text-red-600 dark:text-red-400">
+          <AlertCircle className="h-5 w-5" />
+          <span>Error al cargar el dashboard</span>
+        </div>
+        <button
+          onClick={() => refetch()}
+          className="text-sm text-red-600 dark:text-red-400 underline hover:no-underline"
+        >
+          Reintentar
+        </button>
       </div>
     )
   }
