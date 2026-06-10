@@ -46,7 +46,9 @@ if errorlevel 1 (
 )
 
 :docker_listo
-docker compose up -d
+:: --build reconstruye las imagenes si no existen o si el codigo cambio
+:: La cache de Docker hace que sea rapido cuando no hay cambios
+docker compose up -d --build
 
 if errorlevel 1 (
     echo.
