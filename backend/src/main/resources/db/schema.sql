@@ -134,8 +134,7 @@ INSERT IGNORE INTO categorias_material (nombre, descripcion) VALUES
     ('Fungibles',   'Pilas, cintas, bridas, consumibles varios');
 
 -- Admin inicial — contraseña: Admin1234!
--- Regenerar con: new BCryptPasswordEncoder().encode("Admin1234!")
 INSERT IGNORE INTO usuarios (nombre, email, password_hash, rol) VALUES
     ('Administrador', 'admin@empresa.com',
-     '$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',
+     '$2b$10$eMKB8Ftn1PphDU.wjqBs0eZHlAg5US0rsPBFUjD5JJz907RKuaDBa',
      'ADMIN');
