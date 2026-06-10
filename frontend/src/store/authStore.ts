@@ -15,6 +15,7 @@ interface AuthState {
   iniciarSesion: (token: string, usuario: UsuarioSesion) => void
   cerrarSesion: () => void
   estaAutenticado: () => boolean
+  actualizarUsuario: (datos: Partial<UsuarioSesion>) => void
 }
 
 export const useAuthStore = create<AuthState>()(
@@ -28,6 +29,9 @@ export const useAuthStore = create<AuthState>()(
       cerrarSesion: () => set({ token: null, usuario: null }),
 
       estaAutenticado: () => !!get().token,
+
+      actualizarUsuario: (datos) =>
+        set((s) => ({ usuario: s.usuario ? { ...s.usuario, ...datos } : s.usuario })),
     }),
     {
       name: 'gestor-auth',

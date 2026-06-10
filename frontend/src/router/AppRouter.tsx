@@ -8,6 +8,7 @@ import { ClienteListado } from '@/pages/clientes/ClienteListado'
 import { EventoListado } from '@/pages/eventos/EventoListado'
 import { EventoDetalle } from '@/pages/eventos/EventoDetalle'
 import { AlbaranListado } from '@/pages/albaranes/AlbaranListado'
+import { Perfil } from '@/pages/perfil/Perfil'
 
 function RutaProtegida({ children }: { children: React.ReactNode }) {
   const estaAutenticado = useAuthStore((s) => s.estaAutenticado())
@@ -31,6 +32,7 @@ export function AppRouter() {
                 <Route path="/eventos"       element={<EventoListado />} />
                 <Route path="/eventos/:id"   element={<EventoDetalle />} />
                 <Route path="/albaranes"     element={<AlbaranListado />} />
+                <Route path="/perfil"        element={<Perfil />} />
                 <Route path="*"              element={<Navigate to="/" replace />} />
               </Routes>
             </Layout>

@@ -202,3 +202,20 @@ export interface AlbaranResponse {
   pdfUrl: string
   mensaje: string
 }
+
+export interface PerfilRequest {
+  nombre: string
+  email: string
+}
+
+export interface CambiarContrasenaRequest {
+  contrasenaActual: string
+  contrasenaNueva: string
+}
+
+export interface UsuarioResponse {
+  id: number
+  nombre: string
+  email: string
+  rol: RolUsuario
+}

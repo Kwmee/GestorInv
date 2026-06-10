@@ -1,7 +1,7 @@
 import { NavLink } from 'react-router-dom'
 import {
   LayoutDashboard, Package, Users, CalendarDays,
-  FileText, LogOut,
+  FileText, LogOut, Settings,
 } from 'lucide-react'
 import clsx from 'clsx'
 import { useAuthStore } from '@/store/authStore'
@@ -45,14 +45,26 @@ export function Sidebar() {
         ))}
       </nav>
 
-      {/* Usuario + cerrar sesión */}
-      <div className="px-4 py-4 border-t border-white/10">
+      {/* Usuario + ajustes + cerrar sesión */}
+      <div className="px-4 py-4 border-t border-white/10 space-y-1">
         {usuario && (
-          <div className="mb-3 px-1">
+          <div className="mb-2 px-1">
             <p className="text-sm font-medium text-white truncate">{usuario.nombre}</p>
-            <p className="text-xs text-blue-300 truncate">{usuario.rol}</p>
+            <p className="text-xs text-blue-300 truncate">{usuario.email}</p>
           </div>
         )}
+        <NavLink
+          to="/perfil"
+          className={({ isActive }) => clsx(
+            'flex w-full items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors',
+            isActive
+              ? 'bg-blue-600 text-white'
+              : 'text-blue-200 hover:bg-white/10 hover:text-white'
+          )}
+        >
+          <Settings className="h-4 w-4" />
+          Mi perfil
+        </NavLink>
         <button
           onClick={cerrarSesion}
           className="flex w-full items-center gap-3 px-3 py-2 rounded-lg text-sm text-blue-200 hover:bg-white/10 hover:text-white transition-colors"
