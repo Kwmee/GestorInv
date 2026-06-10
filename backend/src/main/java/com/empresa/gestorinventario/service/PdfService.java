@@ -21,8 +21,6 @@ import com.itextpdf.layout.properties.TextAlignment;
 import com.itextpdf.layout.properties.UnitValue;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayOutputStream;
@@ -41,28 +39,13 @@ public class PdfService {
     private static final DeviceRgb COLOR_CABECERA = new DeviceRgb(30, 64, 118);
     private static final DeviceRgb COLOR_FILA_PAR  = new DeviceRgb(240, 244, 250);
 
-    @Value("${app.empresa.nombre}")
-    private String empresaNombre;
-
-    @Value("${app.empresa.direccion}")
-    private String empresaDireccion;
-
-    @Value("${app.empresa.telefono}")
-    private String empresaTelefono;
-
-    @Value("${app.empresa.email}")
-    private String empresaEmail;
-
-    @Value("${app.empresa.logo-path}")
-    private String logoPath;
-
     @Value("${app.albaranes.ruta-almacenamiento}")
     private String rutaAlmacenamiento;
 
-    private final ResourceLoader resourceLoader;
+    private final EmpresaService empresaService;
 
-    public PdfService(ResourceLoader resourceLoader) {
-        this.resourceLoader = resourceLoader;
+    public PdfService(EmpresaService empresaService) {
+        this.empresaService = empresaService;
     }
 
     public String generarAlbaranSalida(Evento evento, String numero) {
@@ -133,14 +116,22 @@ public class PdfService {
             .setWidth(UnitValue.createPercentValue(100));
 
         // Celda izquierda: logo + datos empresa
+        var config = empresaService.obtenerConfig();
         Cell celdaEmpresa = new Cell().setBorder(Border.NO_BORDER);
         agregarLogo(celdaEmpresa);
-        celdaEmpresa.add(new Paragraph(empresaNombre)
+        celdaEmpresa.add(new Paragraph(config.getNombre())
             .setFont(fontNegrita).setFontSize(12).setMarginTop(4));
-        celdaEmpresa.add(new Paragraph(empresaDireccion)
-            .setFont(fontNormal).setFontSize(8).setFontColor(ColorConstants.GRAY));
-        celdaEmpresa.add(new Paragraph("Tel: " + empresaTelefono + "  |  " + empresaEmail)
-            .setFont(fontNormal).setFontSize(8).setFontColor(ColorConstants.GRAY));
+        if (config.getDireccion() != null) {
+            celdaEmpresa.add(new Paragraph(config.getDireccion())
+                .setFont(fontNormal).setFontSize(8).setFontColor(ColorConstants.GRAY));
+        }
+        String contacto = "";
+        if (config.getTelefono() != null) contacto += "Tel: " + config.getTelefono();
+        if (config.getEmail() != null) contacto += (contacto.isEmpty() ? "" : "  |  ") + config.getEmail();
+        if (!contacto.isEmpty()) {
+            celdaEmpresa.add(new Paragraph(contacto)
+                .setFont(fontNormal).setFontSize(8).setFontColor(ColorConstants.GRAY));
+        }
 
         // Celda derecha: tipo y número de albarán
         Cell celdaAlbaran = new Cell().setBorder(Border.NO_BORDER)
@@ -164,9 +155,8 @@ public class PdfService {
 
     private void agregarLogo(Cell celda) {
         try {
-            Resource logoResource = resourceLoader.getResource(logoPath);
-            if (logoResource.exists()) {
-                byte[] logoBytes = logoResource.getInputStream().readAllBytes();
+            byte[] logoBytes = empresaService.obtenerLogoBytes();
+            if (logoBytes != null) {
                 Image logo = new Image(ImageDataFactory.create(logoBytes))
                     .setWidth(100).setHeight(40);
                 celda.add(logo);
@@ -285,7 +275,7 @@ public class PdfService {
     private void agregarPieDocumento(Document doc, PdfFont fontNormal) {
         doc.add(new LineSeparator(new com.itextpdf.kernel.pdf.canvas.draw.SolidLine())
             .setMarginTop(20));
-        doc.add(new Paragraph("Documento generado por GestorInventario v1.0  |  " + empresaNombre)
+        doc.add(new Paragraph("Documento generado por GestorInventario v1.0  |  " + empresaService.obtenerConfig().getNombre())
             .setFont(fontNormal).setFontSize(7)
             .setFontColor(ColorConstants.GRAY)
             .setTextAlignment(TextAlignment.CENTER)

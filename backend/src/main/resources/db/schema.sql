@@ -133,6 +133,18 @@ INSERT IGNORE INTO categorias_material (nombre, descripcion) VALUES
     ('Estructuras', 'Torres, truss, rigging, bases'),
     ('Fungibles',   'Pilas, cintas, bridas, consumibles varios');
 
+CREATE TABLE IF NOT EXISTS configuracion_empresa (
+    id        BIGINT NOT NULL PRIMARY KEY,
+    nombre    VARCHAR(200) NOT NULL,
+    direccion VARCHAR(500),
+    telefono  VARCHAR(50),
+    email     VARCHAR(200),
+    logo_path VARCHAR(500)
+) ENGINE=InnoDB;
+
+INSERT IGNORE INTO configuracion_empresa (id, nombre, direccion, telefono, email) VALUES
+    (1, 'Empresa Sonido S.L.', 'Polígono Industrial, Nave 7', '+34 600 000 000', 'info@empresa.com');
+
 -- Admin inicial — contraseña: Admin1234!
 INSERT IGNORE INTO usuarios (nombre, email, password_hash, rol) VALUES
     ('Administrador', 'admin@empresa.com',

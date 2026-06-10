@@ -42,6 +42,7 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/auth/login").permitAll()
                 .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
+                .requestMatchers(HttpMethod.GET, "/config/empresa/logo").permitAll()
                 .requestMatchers(HttpMethod.GET, "/albaranes/**").authenticated()
                 .anyRequest().authenticated()
             )

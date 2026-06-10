@@ -36,9 +36,9 @@ services:
       APP_EMPRESA_EMAIL: ${EMPRESA_EMAIL:-info@empresa.com}
       APP_EMPRESA_DIRECCION: ${EMPRESA_DIRECCION:-Polígono Industrial, Nave 7}
       APP_ALBARANES_RUTA_ALMACENAMIENTO: /app/albaranes-pdf
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
     volumes:
       - albaranes_pdf:/app/albaranes-pdf
-      - ./logo.png:/app/static/logo.png:ro
     ports:
       - "8080:8080"
 

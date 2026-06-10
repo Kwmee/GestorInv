@@ -1,7 +1,7 @@
 import { NavLink } from 'react-router-dom'
 import {
   LayoutDashboard, Package, Users, CalendarDays,
-  FileText, LogOut, Settings, Sun, Moon,
+  FileText, LogOut, Settings, Sun, Moon, Building2,
 } from 'lucide-react'
 import clsx from 'clsx'
 import { useAuthStore } from '@/store/authStore'
@@ -59,6 +59,22 @@ export function Sidebar() {
             : <Moon className="h-4 w-4" />}
           {tema === 'dark' ? 'Modo claro' : 'Modo oscuro'}
         </button>
+
+        {/* Configuración empresa (solo admin) */}
+        {usuario?.rol === 'ADMIN' && (
+          <NavLink
+            to="/configuracion"
+            className={({ isActive }) => clsx(
+              'flex w-full items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors',
+              isActive
+                ? 'bg-blue-600 dark:bg-zinc-700 text-white'
+                : 'text-blue-200 dark:text-zinc-400 hover:bg-white/10 dark:hover:bg-zinc-800 hover:text-white dark:hover:text-white'
+            )}
+          >
+            <Building2 className="h-4 w-4" />
+            Mi empresa
+          </NavLink>
+        )}
 
         {/* Perfil */}
         <NavLink

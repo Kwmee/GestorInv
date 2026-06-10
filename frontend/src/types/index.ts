@@ -219,3 +219,18 @@ export interface UsuarioResponse {
   email: string
   rol: RolUsuario
 }
+
+export interface EmpresaRequest {
+  nombre: string
+  direccion?: string
+  telefono?: string
+  email?: string
+}
+
+export interface EmpresaResponse {
+  nombre: string
+  direccion?: string
+  telefono?: string
+  email?: string
+  tieneLogo: boolean
+}
