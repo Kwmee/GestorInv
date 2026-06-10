@@ -6,21 +6,15 @@ Sistema de gestión de inventario y albaranes para empresa de sonido.
 
 ## Instalación para el cliente (Windows)
 
-### Requisitos previos — solo una vez
+### Primera instalación
 
-1. Instala **Docker Desktop**: https://www.docker.com/products/docker-desktop/
-   - Siguiente → Siguiente → Finalizar
-   - Reinicia el PC si lo pide
-
-2. Descarga este proyecto como ZIP desde GitHub:
+1. Descarga este proyecto como ZIP desde GitHub:
    - Botón verde **Code** → **Download ZIP**
    - Descomprime en `C:\GestorInventario`
 
-### Primera instalación
+2. Doble clic en **`instalar.bat`**
 
-Doble clic en **`instalar.bat`**
-
-El script te preguntará el nombre de tu empresa, teléfono, email y contraseña.
+El script instala Docker automáticamente si no está presente, te pregunta el nombre de tu empresa, teléfono, email y contraseña, y levanta el sistema.
 Al terminar abre automáticamente el navegador.
 
 ```
@@ -88,6 +82,6 @@ docker compose up -d
 # Frontend: cd frontend && npm install && npm run dev
 ```
 
-Swagger UI: http://localhost:8080/api/swagger-ui/index.html
+Swagger UI: http://localhost/api/swagger-ui/index.html
 
 Documentación Métrica 3 completa en `/docs`.
