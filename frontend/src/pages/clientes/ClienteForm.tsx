@@ -81,7 +81,7 @@ export function ClienteForm({ cliente, onExito }: Props) {
         {...register('direccion')}
       />
 
-      <div className="flex justify-end pt-2 border-t">
+      <div className="flex justify-end pt-2 border-t dark:border-zinc-800">
         <Button type="submit" cargando={isPending}>
           {esEdicion ? 'Guardar cambios' : 'Crear cliente'}
         </Button>

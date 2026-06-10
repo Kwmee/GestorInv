@@ -31,8 +31,8 @@ export function EventoListado() {
     <div className="space-y-5">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold text-gray-900">Eventos</h2>
-          <p className="text-sm text-gray-500 mt-0.5">
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-zinc-100">Eventos</h2>
+          <p className="text-sm text-gray-500 dark:text-zinc-400 mt-0.5">
             {data ? `${data.totalElementos} eventos` : ''}
           </p>
         </div>
@@ -42,7 +42,7 @@ export function EventoListado() {
         </Button>
       </div>
 
-      <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-4 flex gap-3">
+      <div className="bg-white dark:bg-zinc-900 rounded-xl border border-gray-100 dark:border-zinc-800 shadow-sm p-4 flex gap-3">
         <Select
           value={estado}
           onChange={(e) => { setEstado(e.target.value); setPagina(0) }}
@@ -56,28 +56,28 @@ export function EventoListado() {
         </Select>
       </div>
 
-      <div className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
+      <div className="bg-white dark:bg-zinc-900 rounded-xl border border-gray-100 dark:border-zinc-800 shadow-sm overflow-hidden">
         {isLoading ? (
           <div className="flex justify-center py-12">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-700" />
           </div>
         ) : (
           <table className="w-full text-sm">
-            <thead className="bg-gray-50 border-b border-gray-100">
+            <thead className="bg-gray-50 dark:bg-zinc-800 border-b border-gray-100 dark:border-zinc-700">
               <tr>
-                <th className="px-4 py-3 text-left font-medium text-gray-600">Evento</th>
-                <th className="px-4 py-3 text-left font-medium text-gray-600">Cliente</th>
-                <th className="px-4 py-3 text-left font-medium text-gray-600">Lugar</th>
-                <th className="px-4 py-3 text-left font-medium text-gray-600">Fecha inicio</th>
-                <th className="px-4 py-3 text-left font-medium text-gray-600">Material</th>
-                <th className="px-4 py-3 text-left font-medium text-gray-600">Estado</th>
+                <th className="px-4 py-3 text-left font-medium text-gray-600 dark:text-zinc-400">Evento</th>
+                <th className="px-4 py-3 text-left font-medium text-gray-600 dark:text-zinc-400">Cliente</th>
+                <th className="px-4 py-3 text-left font-medium text-gray-600 dark:text-zinc-400">Lugar</th>
+                <th className="px-4 py-3 text-left font-medium text-gray-600 dark:text-zinc-400">Fecha inicio</th>
+                <th className="px-4 py-3 text-left font-medium text-gray-600 dark:text-zinc-400">Material</th>
+                <th className="px-4 py-3 text-left font-medium text-gray-600 dark:text-zinc-400">Estado</th>
                 <th className="px-4 py-3" />
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-50">
+            <tbody className="divide-y divide-gray-50 dark:divide-zinc-800">
               {data?.contenido.length === 0 && (
                 <tr>
-                  <td colSpan={7} className="text-center py-10 text-gray-400">
+                  <td colSpan={7} className="text-center py-10 text-gray-400 dark:text-zinc-500">
                     No se encontraron eventos
                   </td>
                 </tr>
@@ -85,22 +85,22 @@ export function EventoListado() {
               {data?.contenido.map((e) => (
                 <tr
                   key={e.id}
-                  className="hover:bg-gray-50 transition-colors cursor-pointer"
+                  className="hover:bg-gray-50 dark:hover:bg-zinc-800 transition-colors cursor-pointer"
                   onClick={() => navigate(`/eventos/${e.id}`)}
                 >
-                  <td className="px-4 py-3 font-medium text-gray-900">{e.nombre}</td>
-                  <td className="px-4 py-3 text-gray-600">{e.cliente.razonSocial}</td>
-                  <td className="px-4 py-3 text-gray-500">{e.lugar ?? '—'}</td>
-                  <td className="px-4 py-3 text-gray-600">{formatFecha(e.fechaInicio)}</td>
-                  <td className="px-4 py-3 text-gray-600 text-center">
-                    <span className="bg-gray-100 text-gray-700 px-2 py-0.5 rounded-full text-xs">
+                  <td className="px-4 py-3 font-medium text-gray-900 dark:text-zinc-100">{e.nombre}</td>
+                  <td className="px-4 py-3 text-gray-600 dark:text-zinc-400">{e.cliente.razonSocial}</td>
+                  <td className="px-4 py-3 text-gray-500 dark:text-zinc-500">{e.lugar ?? '—'}</td>
+                  <td className="px-4 py-3 text-gray-600 dark:text-zinc-400">{formatFecha(e.fechaInicio)}</td>
+                  <td className="px-4 py-3 text-gray-600 dark:text-zinc-400 text-center">
+                    <span className="bg-gray-100 dark:bg-zinc-800 text-gray-700 dark:text-zinc-400 px-2 py-0.5 rounded-full text-xs">
                       {e.lineas.length} ítems
                     </span>
                   </td>
                   <td className="px-4 py-3">
                     <EstadoBadge estado={e.estado} />
                   </td>
-                  <td className="px-4 py-3 text-gray-400">
+                  <td className="px-4 py-3 text-gray-400 dark:text-zinc-600">
                     <ChevronRight className="h-4 w-4" />
                   </td>
                 </tr>

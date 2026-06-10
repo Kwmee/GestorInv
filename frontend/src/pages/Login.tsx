@@ -24,11 +24,11 @@ export function Login() {
   })
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#1e264a] to-blue-800 flex items-center justify-center p-4">
-      <div className="w-full max-w-sm bg-white rounded-xl shadow-2xl p-8">
+    <div className="min-h-screen bg-gradient-to-br from-[#1e264a] to-blue-800 dark:from-black dark:to-zinc-950 flex items-center justify-center p-4">
+      <div className="w-full max-w-sm bg-white dark:bg-zinc-900 rounded-xl shadow-2xl p-8">
         <div className="text-center mb-8">
-          <h1 className="text-2xl font-bold text-gray-900">GestorInventario</h1>
-          <p className="text-sm text-gray-500 mt-1">Empresa de Sonido</p>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-zinc-100">GestorInventario</h1>
+          <p className="text-sm text-gray-500 dark:text-zinc-400 mt-1">Empresa de Sonido</p>
         </div>
 
         <form onSubmit={handleSubmit((data) => login(data))} className="space-y-4">

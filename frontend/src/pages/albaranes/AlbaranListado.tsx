@@ -38,13 +38,13 @@ export function AlbaranListado() {
   return (
     <div className="space-y-5">
       <div>
-        <h2 className="text-2xl font-bold text-gray-900">Albaranes</h2>
-        <p className="text-sm text-gray-500 mt-0.5">
+        <h2 className="text-2xl font-bold text-gray-900 dark:text-zinc-100">Albaranes</h2>
+        <p className="text-sm text-gray-500 dark:text-zinc-400 mt-0.5">
           {data ? `${data.totalElementos} albaranes` : ''}
         </p>
       </div>
 
-      <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-4">
+      <div className="bg-white dark:bg-zinc-900 rounded-xl border border-gray-100 dark:border-zinc-800 shadow-sm p-4">
         <Select
           value={tipo}
           onChange={(e) => { setTipo(e.target.value); setPagina(0) }}
@@ -56,50 +56,50 @@ export function AlbaranListado() {
         </Select>
       </div>
 
-      <div className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
+      <div className="bg-white dark:bg-zinc-900 rounded-xl border border-gray-100 dark:border-zinc-800 shadow-sm overflow-hidden">
         {isLoading ? (
           <div className="flex justify-center py-12">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-700" />
           </div>
         ) : (
           <table className="w-full text-sm">
-            <thead className="bg-gray-50 border-b border-gray-100">
+            <thead className="bg-gray-50 dark:bg-zinc-800 border-b border-gray-100 dark:border-zinc-700">
               <tr>
-                <th className="px-4 py-3 text-left font-medium text-gray-600">Número</th>
-                <th className="px-4 py-3 text-left font-medium text-gray-600">Tipo</th>
-                <th className="px-4 py-3 text-left font-medium text-gray-600">Evento</th>
-                <th className="px-4 py-3 text-left font-medium text-gray-600">Fecha emisión</th>
+                <th className="px-4 py-3 text-left font-medium text-gray-600 dark:text-zinc-400">Número</th>
+                <th className="px-4 py-3 text-left font-medium text-gray-600 dark:text-zinc-400">Tipo</th>
+                <th className="px-4 py-3 text-left font-medium text-gray-600 dark:text-zinc-400">Evento</th>
+                <th className="px-4 py-3 text-left font-medium text-gray-600 dark:text-zinc-400">Fecha emisión</th>
                 <th className="px-4 py-3" />
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-50">
+            <tbody className="divide-y divide-gray-50 dark:divide-zinc-800">
               {data?.contenido.length === 0 && (
                 <tr>
-                  <td colSpan={5} className="text-center py-10 text-gray-400">
+                  <td colSpan={5} className="text-center py-10 text-gray-400 dark:text-zinc-500">
                     No se encontraron albaranes
                   </td>
                 </tr>
               )}
               {data?.contenido.map((a) => (
-                <tr key={a.id} className="hover:bg-gray-50 transition-colors">
+                <tr key={a.id} className="hover:bg-gray-50 dark:hover:bg-zinc-800 transition-colors">
                   <td className="px-4 py-3">
                     <div className="flex items-center gap-2">
-                      <FileText className="h-4 w-4 text-gray-400" />
-                      <span className="font-mono font-medium text-gray-900">{a.numero}</span>
+                      <FileText className="h-4 w-4 text-gray-400 dark:text-zinc-500" />
+                      <span className="font-mono font-medium text-gray-900 dark:text-zinc-100">{a.numero}</span>
                     </div>
                   </td>
                   <td className="px-4 py-3">
                     <span className={clsx(
                       'text-xs font-medium px-2.5 py-0.5 rounded-full',
                       a.tipo === 'SALIDA'
-                        ? 'bg-blue-100 text-blue-700'
-                        : 'bg-green-100 text-green-700'
+                        ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400'
+                        : 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400'
                     )}>
                       {a.tipo === 'SALIDA' ? 'Salida' : 'Devolución'}
                     </span>
                   </td>
-                  <td className="px-4 py-3 text-gray-700">{a.eventoNombre}</td>
-                  <td className="px-4 py-3 text-gray-500">{formatFecha(a.fechaEmision)}</td>
+                  <td className="px-4 py-3 text-gray-700 dark:text-zinc-300">{a.eventoNombre}</td>
+                  <td className="px-4 py-3 text-gray-500 dark:text-zinc-500">{formatFecha(a.fechaEmision)}</td>
                   <td className="px-4 py-3 text-right">
                     <Button
                       variante="fantasma"

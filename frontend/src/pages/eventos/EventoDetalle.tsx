@@ -99,15 +99,15 @@ export function EventoDetalle() {
       {/* Cabecera */}
       <div className="flex items-start justify-between">
         <div className="flex items-center gap-3">
-          <button onClick={() => navigate('/eventos')} className="text-gray-400 hover:text-gray-600">
+          <button onClick={() => navigate('/eventos')} className="text-gray-400 hover:text-gray-600 dark:hover:text-zinc-200">
             <ArrowLeft className="h-5 w-5" />
           </button>
           <div>
-            <h2 className="text-2xl font-bold text-gray-900">{evento.nombre}</h2>
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-zinc-100">{evento.nombre}</h2>
             <div className="flex items-center gap-2 mt-1">
               <EstadoBadge estado={evento.estado} />
-              <span className="text-sm text-gray-500">{evento.cliente.razonSocial}</span>
-              {evento.lugar && <span className="text-sm text-gray-400">· {evento.lugar}</span>}
+              <span className="text-sm text-gray-500 dark:text-zinc-400">{evento.cliente.razonSocial}</span>
+              {evento.lugar && <span className="text-sm text-gray-400 dark:text-zinc-500">· {evento.lugar}</span>}
             </div>
           </div>
         </div>
@@ -142,41 +142,41 @@ export function EventoDetalle() {
           { label: 'Fecha fin', valor: evento.fechaFin ? formatFecha(evento.fechaFin) : '—' },
           { label: 'Técnico', valor: evento.tecnicoResponsable?.nombre ?? '—' },
         ].map(({ label, valor }) => (
-          <div key={label} className="bg-white rounded-xl border border-gray-100 shadow-sm p-4">
-            <p className="text-xs text-gray-500">{label}</p>
-            <p className="font-medium text-gray-900 mt-0.5">{valor}</p>
+          <div key={label} className="bg-white dark:bg-zinc-900 rounded-xl border border-gray-100 dark:border-zinc-800 shadow-sm p-4">
+            <p className="text-xs text-gray-500 dark:text-zinc-400">{label}</p>
+            <p className="font-medium text-gray-900 dark:text-zinc-100 mt-0.5">{valor}</p>
           </div>
         ))}
       </div>
 
       {/* Material asignado */}
-      <div className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
-        <div className="px-5 py-4 border-b border-gray-100">
-          <h3 className="font-semibold text-gray-900">
+      <div className="bg-white dark:bg-zinc-900 rounded-xl border border-gray-100 dark:border-zinc-800 shadow-sm overflow-hidden">
+        <div className="px-5 py-4 border-b border-gray-100 dark:border-zinc-800">
+          <h3 className="font-semibold text-gray-900 dark:text-zinc-100">
             Material asignado ({evento.lineas.length} ítems)
           </h3>
         </div>
         {evento.lineas.length === 0 ? (
-          <p className="text-center text-gray-400 py-8">Sin material asignado</p>
+          <p className="text-center text-gray-400 dark:text-zinc-500 py-8">Sin material asignado</p>
         ) : (
           <table className="w-full text-sm">
-            <thead className="bg-gray-50">
+            <thead className="bg-gray-50 dark:bg-zinc-800 border-b border-gray-100 dark:border-zinc-700">
               <tr>
-                <th className="px-4 py-3 text-left font-medium text-gray-600">Material</th>
-                <th className="px-4 py-3 text-left font-medium text-gray-600">Nº Serie</th>
-                <th className="px-4 py-3 text-center font-medium text-gray-600">Cant.</th>
-                <th className="px-4 py-3 text-left font-medium text-gray-600">Devolución</th>
+                <th className="px-4 py-3 text-left font-medium text-gray-600 dark:text-zinc-400">Material</th>
+                <th className="px-4 py-3 text-left font-medium text-gray-600 dark:text-zinc-400">Nº Serie</th>
+                <th className="px-4 py-3 text-center font-medium text-gray-600 dark:text-zinc-400">Cant.</th>
+                <th className="px-4 py-3 text-left font-medium text-gray-600 dark:text-zinc-400">Devolución</th>
                 {esPlanificado && <th className="px-4 py-3" />}
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-50">
+            <tbody className="divide-y divide-gray-50 dark:divide-zinc-800">
               {evento.lineas.map((l) => (
-                <tr key={l.id}>
-                  <td className="px-4 py-3 font-medium text-gray-900">{l.materialNombre}</td>
-                  <td className="px-4 py-3 text-gray-500 font-mono text-xs">
+                <tr key={l.id} className="hover:bg-gray-50 dark:hover:bg-zinc-800 transition-colors">
+                  <td className="px-4 py-3 font-medium text-gray-900 dark:text-zinc-100">{l.materialNombre}</td>
+                  <td className="px-4 py-3 text-gray-500 dark:text-zinc-500 font-mono text-xs">
                     {l.materialNumeroSerie ?? '—'}
                   </td>
-                  <td className="px-4 py-3 text-center">{l.cantidad}</td>
+                  <td className="px-4 py-3 text-center text-gray-700 dark:text-zinc-300">{l.cantidad}</td>
                   <td className="px-4 py-3">
                     <EstadoBadge estado={l.estadoDevolucion} />
                   </td>
@@ -184,7 +184,7 @@ export function EventoDetalle() {
                     <td className="px-4 py-3 text-right">
                       <button
                         onClick={() => quitarMaterial(l.materialId)}
-                        className="text-gray-400 hover:text-red-600 transition-colors"
+                        className="text-gray-400 hover:text-red-600 dark:hover:text-red-400 transition-colors"
                       >
                         <Trash2 className="h-4 w-4" />
                       </button>
@@ -199,16 +199,16 @@ export function EventoDetalle() {
 
       {/* Albaranes */}
       {evento.albaranes && evento.albaranes.length > 0 && (
-        <div className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
-          <div className="px-5 py-4 border-b border-gray-100">
-            <h3 className="font-semibold text-gray-900">Albaranes</h3>
+        <div className="bg-white dark:bg-zinc-900 rounded-xl border border-gray-100 dark:border-zinc-800 shadow-sm overflow-hidden">
+          <div className="px-5 py-4 border-b border-gray-100 dark:border-zinc-800">
+            <h3 className="font-semibold text-gray-900 dark:text-zinc-100">Albaranes</h3>
           </div>
-          <div className="divide-y divide-gray-50">
+          <div className="divide-y divide-gray-50 dark:divide-zinc-800">
             {evento.albaranes.map((a: any) => (
-              <div key={a.id} className="flex items-center justify-between px-5 py-3">
+              <div key={a.id} className="flex items-center justify-between px-5 py-3 hover:bg-gray-50 dark:hover:bg-zinc-800 transition-colors">
                 <div>
-                  <p className="font-medium text-sm">{a.numero}</p>
-                  <p className="text-xs text-gray-500">
+                  <p className="font-medium text-sm text-gray-900 dark:text-zinc-100">{a.numero}</p>
+                  <p className="text-xs text-gray-500 dark:text-zinc-500">
                     {a.tipo === 'SALIDA' ? 'Albarán de salida' : 'Albarán de devolución'} ·{' '}
                     {formatFecha(a.fechaEmision)}
                   </p>
@@ -266,7 +266,7 @@ export function EventoDetalle() {
           <select
             value={materialAnadir}
             onChange={(e) => setMaterialAnadir(e.target.value)}
-            className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
+            className="w-full rounded-md border border-gray-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-gray-900 dark:text-zinc-100 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
             <option value="">Seleccionar material disponible...</option>
             {materialDisponible?.contenido

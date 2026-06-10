@@ -9,10 +9,10 @@ interface Props extends ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 const varianteClases = {
-  primario:   'bg-blue-700 hover:bg-blue-800 text-white border-transparent',
-  secundario: 'bg-white hover:bg-gray-50 text-gray-700 border-gray-300',
+  primario:   'bg-blue-700 hover:bg-blue-800 text-white border-transparent dark:bg-blue-600 dark:hover:bg-blue-700',
+  secundario: 'bg-white hover:bg-gray-50 text-gray-700 border-gray-300 dark:bg-zinc-800 dark:hover:bg-zinc-700 dark:text-zinc-200 dark:border-zinc-700',
   peligro:    'bg-red-600 hover:bg-red-700 text-white border-transparent',
-  fantasma:   'bg-transparent hover:bg-gray-100 text-gray-600 border-transparent',
+  fantasma:   'bg-transparent hover:bg-gray-100 text-gray-600 border-transparent dark:hover:bg-zinc-800 dark:text-zinc-300',
 }
 
 const tamanoClases = {

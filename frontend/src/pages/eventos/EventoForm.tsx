@@ -109,24 +109,24 @@ export function EventoForm({ onExito }: Props) {
         />
 
         <div className="col-span-2">
-          <label className="text-sm font-medium text-gray-700 block mb-1">Observaciones</label>
+          <label className="text-sm font-medium text-gray-700 dark:text-zinc-300 block mb-1">Observaciones</label>
           <textarea
             rows={2}
-            className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full rounded-md border border-gray-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-gray-900 dark:text-zinc-100 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             {...register('observaciones')}
           />
         </div>
       </div>
 
       {/* Asignación de material */}
-      <div className="border-t pt-4">
-        <h3 className="font-semibold text-gray-800 mb-3">Material asignado</h3>
+      <div className="border-t dark:border-zinc-800 pt-4">
+        <h3 className="font-semibold text-gray-800 dark:text-zinc-200 mb-3">Material asignado</h3>
 
         <div className="flex gap-2 mb-3">
           <select
             value={materialSeleccionado}
             onChange={(e) => setMaterialSeleccionado(e.target.value)}
-            className="flex-1 rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="flex-1 rounded-md border border-gray-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-gray-900 dark:text-zinc-100 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
             <option value="">Seleccionar material disponible...</option>
             {materialDisponible?.contenido
@@ -144,7 +144,7 @@ export function EventoForm({ onExito }: Props) {
         </div>
 
         {lineas.length === 0 && (
-          <p className="text-sm text-gray-400 text-center py-4 border border-dashed rounded-lg">
+          <p className="text-sm text-gray-400 dark:text-zinc-500 text-center py-4 border border-dashed dark:border-zinc-700 rounded-lg">
             Sin material asignado — puedes añadirlo ahora o más tarde
           </p>
         )}
@@ -152,9 +152,9 @@ export function EventoForm({ onExito }: Props) {
         {lineas.length > 0 && (
           <div className="space-y-2">
             {lineas.map((l) => (
-              <div key={l.materialId} className="flex items-center gap-3 bg-gray-50 rounded-lg px-3 py-2">
+              <div key={l.materialId} className="flex items-center gap-3 bg-gray-50 dark:bg-zinc-800 rounded-lg px-3 py-2">
                 <div className="flex-1">
-                  <p className="text-sm font-medium text-gray-900">{l.material.nombre}</p>
+                  <p className="text-sm font-medium text-gray-900 dark:text-zinc-100">{l.material.nombre}</p>
                   <div className="flex items-center gap-2 mt-0.5">
                     <EstadoBadge estado={l.material.estado} />
                     {l.material.numeroSerie && (
@@ -173,12 +173,12 @@ export function EventoForm({ onExito }: Props) {
                       )
                     )
                   }
-                  className="w-16 text-center rounded border border-gray-300 px-2 py-1 text-sm"
+                  className="w-16 text-center rounded border border-gray-300 dark:border-zinc-600 bg-white dark:bg-zinc-900 text-gray-900 dark:text-zinc-100 px-2 py-1 text-sm"
                 />
                 <button
                   type="button"
                   onClick={() => quitarLinea(l.materialId)}
-                  className="text-gray-400 hover:text-red-600 transition-colors"
+                  className="text-gray-400 hover:text-red-600 dark:hover:text-red-400 transition-colors"
                 >
                   <Trash2 className="h-4 w-4" />
                 </button>
@@ -188,7 +188,7 @@ export function EventoForm({ onExito }: Props) {
         )}
       </div>
 
-      <div className="flex justify-end pt-2 border-t">
+      <div className="flex justify-end pt-2 border-t dark:border-zinc-800">
         <Button type="submit" cargando={isPending}>
           Crear evento
         </Button>

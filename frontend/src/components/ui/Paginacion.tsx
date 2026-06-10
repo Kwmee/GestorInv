@@ -15,7 +15,7 @@ export function Paginacion({ paginaActual, totalPaginas, onCambiar }: Props) {
       <button
         disabled={paginaActual === 0}
         onClick={() => onCambiar(paginaActual - 1)}
-        className="p-1.5 rounded disabled:opacity-40 hover:bg-gray-100"
+        className="p-1.5 rounded disabled:opacity-40 hover:bg-gray-100 dark:hover:bg-zinc-800 dark:text-zinc-400"
       >
         <ChevronLeft className="h-4 w-4" />
       </button>
@@ -27,8 +27,8 @@ export function Paginacion({ paginaActual, totalPaginas, onCambiar }: Props) {
           className={clsx(
             'w-8 h-8 rounded text-sm font-medium',
             i === paginaActual
-              ? 'bg-blue-700 text-white'
-              : 'text-gray-700 hover:bg-gray-100'
+              ? 'bg-blue-700 dark:bg-zinc-700 text-white'
+              : 'text-gray-700 dark:text-zinc-400 hover:bg-gray-100 dark:hover:bg-zinc-800'
           )}
         >
           {i + 1}
@@ -38,7 +38,7 @@ export function Paginacion({ paginaActual, totalPaginas, onCambiar }: Props) {
       <button
         disabled={paginaActual === totalPaginas - 1}
         onClick={() => onCambiar(paginaActual + 1)}
-        className="p-1.5 rounded disabled:opacity-40 hover:bg-gray-100"
+        className="p-1.5 rounded disabled:opacity-40 hover:bg-gray-100 dark:hover:bg-zinc-800 dark:text-zinc-400"
       >
         <ChevronRight className="h-4 w-4" />
       </button>

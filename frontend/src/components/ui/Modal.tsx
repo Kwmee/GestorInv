@@ -36,14 +36,14 @@ export function Modal({ abierto, titulo, onCerrar, children, tamano = 'md' }: Pr
         onClick={onCerrar}
       />
       <div className={clsx(
-        'relative w-full bg-white rounded-lg shadow-xl flex flex-col max-h-[90vh]',
+        'relative w-full bg-white dark:bg-zinc-900 rounded-lg shadow-xl flex flex-col max-h-[90vh]',
         tamanos[tamano]
       )}>
-        <div className="flex items-center justify-between px-6 py-4 border-b">
-          <h2 className="text-lg font-semibold text-gray-900">{titulo}</h2>
+        <div className="flex items-center justify-between px-6 py-4 border-b dark:border-zinc-800">
+          <h2 className="text-lg font-semibold text-gray-900 dark:text-zinc-100">{titulo}</h2>
           <button
             onClick={onCerrar}
-            className="text-gray-400 hover:text-gray-600 transition-colors"
+            className="text-gray-400 hover:text-gray-600 dark:text-zinc-500 dark:hover:text-zinc-300 transition-colors"
           >
             <X className="h-5 w-5" />
           </button>

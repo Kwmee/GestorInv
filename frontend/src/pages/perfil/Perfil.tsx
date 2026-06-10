@@ -52,13 +52,13 @@ export function Perfil() {
   return (
     <div className="max-w-lg space-y-8">
       <div>
-        <h1 className="text-2xl font-bold text-gray-900">Mi perfil</h1>
-        <p className="text-sm text-gray-500 mt-1">Actualiza tu nombre, email y contraseña</p>
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-zinc-100">Mi perfil</h1>
+        <p className="text-sm text-gray-500 dark:text-zinc-400 mt-1">Actualiza tu nombre, email y contraseña</p>
       </div>
 
       {/* Datos personales */}
-      <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-6">
-        <h2 className="font-semibold text-gray-900 mb-4">Datos personales</h2>
+      <div className="bg-white dark:bg-zinc-900 rounded-xl border border-gray-100 dark:border-zinc-800 shadow-sm p-6">
+        <h2 className="font-semibold text-gray-900 dark:text-zinc-100 mb-4">Datos personales</h2>
         <form onSubmit={formPerfil.handleSubmit((d) => guardarPerfil(d))} className="space-y-4">
           <Input
             label="Nombre"
@@ -76,7 +76,7 @@ export function Perfil() {
               pattern: { value: /\S+@\S+\.\S+/, message: 'Email no válido' },
             })}
           />
-          <div className="flex justify-end pt-2 border-t">
+          <div className="flex justify-end pt-2 border-t dark:border-zinc-800">
             <Button type="submit" cargando={guardandoPerfil}>
               Guardar cambios
             </Button>
@@ -85,8 +85,8 @@ export function Perfil() {
       </div>
 
       {/* Cambiar contraseña */}
-      <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-6">
-        <h2 className="font-semibold text-gray-900 mb-4">Cambiar contraseña</h2>
+      <div className="bg-white dark:bg-zinc-900 rounded-xl border border-gray-100 dark:border-zinc-800 shadow-sm p-6">
+        <h2 className="font-semibold text-gray-900 dark:text-zinc-100 mb-4">Cambiar contraseña</h2>
         <form onSubmit={onSubmitContrasena} className="space-y-4">
           <Input
             label="Contraseña actual"
@@ -112,7 +112,7 @@ export function Perfil() {
             error={formContrasena.formState.errors.confirmar?.message}
             {...formContrasena.register('confirmar', { required: 'Confirma la nueva contraseña' })}
           />
-          <div className="flex justify-end pt-2 border-t">
+          <div className="flex justify-end pt-2 border-t dark:border-zinc-800">
             <Button type="submit" cargando={cambiandoContrasena}>
               Cambiar contraseña
             </Button>

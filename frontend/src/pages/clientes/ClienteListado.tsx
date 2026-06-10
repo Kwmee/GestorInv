@@ -40,8 +40,8 @@ export function ClienteListado() {
     <div className="space-y-5">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold text-gray-900">Clientes</h2>
-          <p className="text-sm text-gray-500 mt-0.5">
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-zinc-100">Clientes</h2>
+          <p className="text-sm text-gray-500 dark:text-zinc-400 mt-0.5">
             {data ? `${data.totalElementos} clientes` : ''}
           </p>
         </div>
@@ -51,51 +51,51 @@ export function ClienteListado() {
         </Button>
       </div>
 
-      <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-4">
+      <div className="bg-white dark:bg-zinc-900 rounded-xl border border-gray-100 dark:border-zinc-800 shadow-sm p-4">
         <div className="relative max-w-sm">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 dark:text-zinc-500" />
           <input
             placeholder="Buscar por nombre o NIF/CIF..."
             value={busqueda}
             onChange={(e) => { setBusqueda(e.target.value); setPagina(0) }}
-            className="w-full pl-9 pr-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full pl-9 pr-3 py-2 text-sm border border-gray-300 dark:border-zinc-700 rounded-md bg-white dark:bg-zinc-900 text-gray-900 dark:text-zinc-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
       </div>
 
-      <div className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
+      <div className="bg-white dark:bg-zinc-900 rounded-xl border border-gray-100 dark:border-zinc-800 shadow-sm overflow-hidden">
         {isLoading ? (
           <div className="flex justify-center py-12">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-700" />
           </div>
         ) : (
           <table className="w-full text-sm">
-            <thead className="bg-gray-50 border-b border-gray-100">
+            <thead className="bg-gray-50 dark:bg-zinc-800 border-b border-gray-100 dark:border-zinc-700">
               <tr>
-                <th className="px-4 py-3 text-left font-medium text-gray-600">Razón social</th>
-                <th className="px-4 py-3 text-left font-medium text-gray-600">NIF/CIF</th>
-                <th className="px-4 py-3 text-left font-medium text-gray-600">Teléfono</th>
-                <th className="px-4 py-3 text-left font-medium text-gray-600">Email</th>
-                <th className="px-4 py-3 text-left font-medium text-gray-600">Tipo</th>
+                <th className="px-4 py-3 text-left font-medium text-gray-600 dark:text-zinc-400">Razón social</th>
+                <th className="px-4 py-3 text-left font-medium text-gray-600 dark:text-zinc-400">NIF/CIF</th>
+                <th className="px-4 py-3 text-left font-medium text-gray-600 dark:text-zinc-400">Teléfono</th>
+                <th className="px-4 py-3 text-left font-medium text-gray-600 dark:text-zinc-400">Email</th>
+                <th className="px-4 py-3 text-left font-medium text-gray-600 dark:text-zinc-400">Tipo</th>
                 <th className="px-4 py-3" />
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-50">
+            <tbody className="divide-y divide-gray-50 dark:divide-zinc-800">
               {data?.contenido.length === 0 && (
                 <tr>
-                  <td colSpan={6} className="text-center py-10 text-gray-400">
+                  <td colSpan={6} className="text-center py-10 text-gray-400 dark:text-zinc-500">
                     No se encontraron clientes
                   </td>
                 </tr>
               )}
               {data?.contenido.map((c) => (
-                <tr key={c.id} className="hover:bg-gray-50 transition-colors">
-                  <td className="px-4 py-3 font-medium text-gray-900">{c.razonSocial}</td>
-                  <td className="px-4 py-3 text-gray-600 font-mono text-xs">{c.nifCif ?? '—'}</td>
-                  <td className="px-4 py-3 text-gray-600">{c.telefono ?? '—'}</td>
-                  <td className="px-4 py-3 text-gray-600">{c.email ?? '—'}</td>
+                <tr key={c.id} className="hover:bg-gray-50 dark:hover:bg-zinc-800 transition-colors">
+                  <td className="px-4 py-3 font-medium text-gray-900 dark:text-zinc-100">{c.razonSocial}</td>
+                  <td className="px-4 py-3 text-gray-600 dark:text-zinc-400 font-mono text-xs">{c.nifCif ?? '—'}</td>
+                  <td className="px-4 py-3 text-gray-600 dark:text-zinc-400">{c.telefono ?? '—'}</td>
+                  <td className="px-4 py-3 text-gray-600 dark:text-zinc-400">{c.email ?? '—'}</td>
                   <td className="px-4 py-3">
-                    <span className="inline-flex items-center gap-1 text-xs text-gray-500">
+                    <span className="inline-flex items-center gap-1 text-xs text-gray-500 dark:text-zinc-500">
                       {c.tipo === 'EMPRESA'
                         ? <><Building2 className="h-3.5 w-3.5" /> Empresa</>
                         : <><User className="h-3.5 w-3.5" /> Particular</>}
@@ -105,13 +105,13 @@ export function ClienteListado() {
                     <div className="flex items-center gap-1 justify-end">
                       <button
                         onClick={() => abrirEditar(c)}
-                        className="p-1.5 text-gray-400 hover:text-blue-600 rounded transition-colors"
+                        className="p-1.5 text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 rounded transition-colors"
                       >
                         <Pencil className="h-4 w-4" />
                       </button>
                       <button
                         onClick={() => setConfirmarDesactivar(c)}
-                        className="p-1.5 text-gray-400 hover:text-red-600 rounded transition-colors"
+                        className="p-1.5 text-gray-400 hover:text-red-600 dark:hover:text-red-400 rounded transition-colors"
                       >
                         <Trash2 className="h-4 w-4" />
                       </button>

@@ -101,10 +101,10 @@ export function MaterialForm({ material, categorias, onExito }: Props) {
         />
 
         <div className="flex flex-col gap-1">
-          <label className="text-sm font-medium text-gray-700">Es fungible / consumible</label>
+          <label className="text-sm font-medium text-gray-700 dark:text-zinc-300">Es fungible / consumible</label>
           <label className="flex items-center gap-2 mt-2 cursor-pointer">
             <input type="checkbox" className="h-4 w-4 rounded" {...register('esFungible')} />
-            <span className="text-sm text-gray-600">Sí, gestionar por stock</span>
+            <span className="text-sm text-gray-600 dark:text-zinc-400">Sí, gestionar por stock</span>
           </label>
         </div>
 
@@ -116,27 +116,27 @@ export function MaterialForm({ material, categorias, onExito }: Props) {
         />
 
         <div className="col-span-2">
-          <label className="text-sm font-medium text-gray-700 block mb-1">Descripción</label>
+          <label className="text-sm font-medium text-gray-700 dark:text-zinc-300 block mb-1">Descripción</label>
           <textarea
             rows={2}
             placeholder="Descripción técnica del material..."
-            className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full rounded-md border border-gray-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-gray-900 dark:text-zinc-100 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             {...register('descripcion')}
           />
         </div>
 
         <div className="col-span-2">
-          <label className="text-sm font-medium text-gray-700 block mb-1">Observaciones</label>
+          <label className="text-sm font-medium text-gray-700 dark:text-zinc-300 block mb-1">Observaciones</label>
           <textarea
             rows={2}
             placeholder="Notas adicionales..."
-            className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full rounded-md border border-gray-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-gray-900 dark:text-zinc-100 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             {...register('observaciones')}
           />
         </div>
       </div>
 
-      <div className="flex justify-end gap-3 pt-2 border-t">
+      <div className="flex justify-end gap-3 pt-2 border-t dark:border-zinc-800">
         <Button type="submit" cargando={isPending}>
           {esEdicion ? 'Guardar cambios' : 'Crear material'}
         </Button>
