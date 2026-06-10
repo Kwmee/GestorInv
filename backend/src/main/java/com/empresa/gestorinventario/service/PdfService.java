@@ -241,7 +241,7 @@ public class PdfService {
         // Filas de material
         for (int i = 0; i < lineas.size(); i++) {
             LineaEvento linea = lineas.get(i);
-            DeviceRgb fondo = i % 2 == 0 ? ColorConstants.WHITE : COLOR_FILA_PAR;
+            DeviceRgb fondo = i % 2 == 0 ? new DeviceRgb(255, 255, 255) : COLOR_FILA_PAR;
 
             tabla.addCell(celda(fontNormal, String.valueOf(i + 1), fondo));
             tabla.addCell(celda(fontNormal, linea.getMaterial().getNombre(), fondo));
