@@ -79,6 +79,7 @@ export interface Evento {
   estado: EstadoEvento
   observaciones?: string
   lineas: LineaEventoInfo[]
+  albaranes?: Albaran[]
   creadoEn: string
 }
 

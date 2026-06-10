@@ -5,14 +5,13 @@ import toast from 'react-hot-toast'
 import { Plus, Search, Pencil, Trash2 } from 'lucide-react'
 import { materialApi } from '@/api/material.api'
 import { Button } from '@/components/ui/Button'
-import { Input } from '@/components/ui/Input'
 import { Select } from '@/components/ui/Select'
 import { EstadoBadge } from '@/components/ui/EstadoBadge'
 import { Paginacion } from '@/components/ui/Paginacion'
 import { ConfirmDialog } from '@/components/ui/ConfirmDialog'
 import { Modal } from '@/components/ui/Modal'
 import { MaterialForm } from './MaterialForm'
-import type { EstadoMaterial, Material } from '@/types'
+import type { Material } from '@/types'
 
 export function InventarioListado() {
   const [searchParams] = useSearchParams()
