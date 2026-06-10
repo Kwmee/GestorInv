@@ -1,0 +1,39 @@
+# ===== Java / Maven =====
+backend/target/
+backend/.mvn/
+*.class
+*.jar
+*.war
+*.ear
+*.log
+
+# ===== Node / React =====
+frontend/node_modules/
+frontend/dist/
+frontend/.env.local
+frontend/.env.*.local
+
+# ===== IntelliJ / VS Code =====
+.idea/
+*.iml
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+
+# ===== Sistema operativo =====
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ===== Albaranes PDF generados =====
+albaranes-pdf/
+
+# ===== Variables de entorno (secretos) =====
+.env
+.env.production
+backend/src/main/resources/application-prod.properties
+
+# ===== Docker =====
+docker-data/
