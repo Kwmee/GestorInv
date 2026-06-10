@@ -5,7 +5,6 @@ echo.
 echo  Iniciando GestorInventario...
 echo.
 
-:: Comprobar si Docker esta instalado
 docker --version >nul 2>&1
 if errorlevel 1 (
     echo  [ERROR] Docker Desktop no esta instalado.
@@ -14,7 +13,6 @@ if errorlevel 1 (
     exit /b 1
 )
 
-:: Arrancar Docker Desktop si el daemon no responde
 docker info >nul 2>&1
 if errorlevel 1 (
     echo  Iniciando Docker Desktop...
@@ -46,8 +44,6 @@ if errorlevel 1 (
 )
 
 :docker_listo
-:: --build reconstruye las imagenes si no existen o si el codigo cambio
-:: La cache de Docker hace que sea rapido cuando no hay cambios
 docker compose up -d --build
 
 if errorlevel 1 (
@@ -63,3 +59,4 @@ echo.
 
 timeout /t 2 /nobreak >nul
 start http://localhost
+pause

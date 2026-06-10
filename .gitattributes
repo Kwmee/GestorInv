@@ -1,0 +1,11 @@
+# Normalizar saltos de línea a LF en el repositorio (compatible Linux/Mac/Windows)
+* text=auto eol=lf
+
+# Scripts Windows — requieren CRLF para que cmd.exe los ejecute
+*.bat text eol=crlf
+
+# Binarios — no tocar
+*.png binary
+*.jpg binary
+*.pdf binary
+*.jar binary
