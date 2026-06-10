@@ -1,17 +1,14 @@
 @echo off
-chcp 65001 >nul
-title GestorInventario — Actualización
+title GestorInventario - Actualizacion
 
 echo.
-echo  ╔══════════════════════════════════════════╗
-echo  ║      GestorInventario — Actualización    ║
-echo  ╚══════════════════════════════════════════╝
+echo  GestorInventario - Actualizacion
 echo.
-echo  Este proceso actualizará el sistema a la última versión.
-echo  Los datos NO se borrarán.
+echo  Este proceso actualizara el sistema a la ultima version.
+echo  Los datos NO se borraran.
 echo.
 
-set /p CONFIRMAR="  ¿Continuar? (S/N): "
+set /p CONFIRMAR="  Continuar? (S/N): "
 if /i not "%CONFIRMAR%"=="S" exit /b 0
 
 echo.
@@ -23,8 +20,6 @@ echo  Reconstruyendo servicios...
 docker compose up -d --build
 
 echo.
-echo  ╔══════════════════════════════════════════╗
-echo  ║   ✓ Actualización completada             ║
-echo  ╚══════════════════════════════════════════╝
+echo  Actualizacion completada.
 echo.
 pause

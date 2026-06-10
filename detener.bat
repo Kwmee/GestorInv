@@ -1,6 +1,5 @@
 @echo off
-chcp 65001 >nul
-title GestorInventario — Deteniendo...
+title GestorInventario - Deteniendo...
 
 echo.
 echo  Deteniendo GestorInventario...
@@ -8,6 +7,6 @@ echo  Deteniendo GestorInventario...
 docker compose down
 
 echo.
-echo  Sistema detenido. Los datos están guardados.
+echo  Sistema detenido. Los datos estan guardados.
 echo.
 pause

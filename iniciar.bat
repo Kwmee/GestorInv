@@ -1,6 +1,5 @@
 @echo off
-chcp 65001 >nul
-title GestorInventario — Iniciando...
+title GestorInventario - Iniciando...
 
 echo.
 echo  Iniciando GestorInventario...
@@ -9,7 +8,7 @@ docker compose up -d
 
 if errorlevel 1 (
     echo.
-    echo  [ERROR] No se pudo iniciar. Asegúrate de que Docker Desktop esté abierto.
+    echo  [ERROR] No se pudo iniciar. Asegurate de que Docker Desktop este abierto.
     pause
     exit /b 1
 )
