@@ -234,6 +234,12 @@ export interface EmpresaRequest {
   email?: string
 }
 
+export interface RedStatus {
+  modoRed: boolean
+  ipsLocales: string[]
+  puerto: number
+}
+
 export interface EmpresaResponse {
   nombre: string
   direccion?: string

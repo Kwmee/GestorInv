@@ -1,0 +1,17 @@
+<service>
+  <id>GestorInventario-App</id>
+  <name>GestorInventario - Backend</name>
+  <description>Spring Boot backend de GestorInventario</description>
+  <executable>%BASE%\jre\bin\java.exe</executable>
+  <arguments>-jar "%BASE%\app\GestorInventario.jar" --spring.config.additional-location=file:%BASE%\config\</arguments>
+  <workingdirectory>%BASE%</workingdirectory>
+  <logpath>%BASE%\logs</logpath>
+  <log mode="roll-by-size">
+    <sizeThreshold>20480</sizeThreshold>
+    <keepFiles>5</keepFiles>
+  </log>
+  <depend>GestorInventario-DB</depend>
+  <onfailure action="restart" delay="10 sec"/>
+  <env name="GESTOR_SERVICE_MODE" value="true"/>
+  <env name="GESTOR_BASE_DIR" value="%BASE%"/>
+</service>
