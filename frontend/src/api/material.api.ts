@@ -27,4 +27,7 @@ export const materialApi = {
 
   listarCategorias: () =>
     axiosClient.get<CategoriaMaterial[]>('/material/categorias').then((r) => r.data),
+
+  listadoPdf: (filtros: FiltrosMaterial = {}) =>
+    axiosClient.get('/material/listado-pdf', { params: filtros, responseType: 'blob' }).then((r) => r.data as Blob),
 }

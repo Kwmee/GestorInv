@@ -2,7 +2,8 @@ import { useState } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { useSearchParams } from 'react-router-dom'
 import toast from 'react-hot-toast'
-import { Plus, Search, Pencil, Trash2 } from 'lucide-react'
+import { Plus, Search, Pencil, Trash2, FileDown } from 'lucide-react'
+import { descargarBlob } from '@/lib/descargar'
 import { materialApi } from '@/api/material.api'
 import { Button } from '@/components/ui/Button'
 import { Select } from '@/components/ui/Select'
@@ -55,6 +56,19 @@ export function InventarioListado() {
   const abrirCrear = () => { setMaterialEditar(null); setModalAbierto(true) }
   const abrirEditar = (m: Material) => { setMaterialEditar(m); setModalAbierto(true) }
 
+  const exportarPdf = async () => {
+    try {
+      const blob = await materialApi.listadoPdf({
+        estado: estado || undefined,
+        categoriaId: categoriaId ? Number(categoriaId) : undefined,
+        q: busqueda || undefined,
+      })
+      descargarBlob(blob, 'inventario.pdf')
+    } catch {
+      toast.error('No se pudo generar el PDF')
+    }
+  }
+
   return (
     <div className="space-y-5">
       <div className="flex items-center justify-between">
@@ -64,10 +78,16 @@ export function InventarioListado() {
             {data ? `${data.totalElementos} ítems` : ''}
           </p>
         </div>
-        <Button onClick={abrirCrear}>
-          <Plus className="h-4 w-4" />
-          Nuevo material
-        </Button>
+        <div className="flex gap-2">
+          <Button variante="secundario" onClick={exportarPdf}>
+            <FileDown className="h-4 w-4" />
+            Exportar PDF
+          </Button>
+          <Button onClick={abrirCrear}>
+            <Plus className="h-4 w-4" />
+            Nuevo material
+          </Button>
+        </div>
       </div>
 
       {/* Filtros */}

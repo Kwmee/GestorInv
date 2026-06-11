@@ -3,6 +3,9 @@ package com.empresa.gestorinventario.service;
 import com.empresa.gestorinventario.exception.NegocioException;
 import com.empresa.gestorinventario.model.entity.Evento;
 import com.empresa.gestorinventario.model.entity.LineaEvento;
+import com.empresa.gestorinventario.model.entity.Material;
+import com.empresa.gestorinventario.model.entity.Trabajador;
+import com.empresa.gestorinventario.model.enums.EstadoMaterial;
 import com.itextpdf.io.font.constants.StandardFonts;
 import com.itextpdf.io.image.ImageDataFactory;
 import com.itextpdf.kernel.colors.ColorConstants;
@@ -25,6 +28,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -48,7 +52,7 @@ public class PdfService {
         this.empresaService = empresaService;
     }
 
-    public String generarAlbaranSalida(Evento evento, String numero) {
+    public String generarAlbaranSalida(Evento evento, String numero, Trabajador trabajador) {
         String nombreArchivo = numero + ".pdf";
         String rutaCompleta = prepararDirectorio(nombreArchivo);
 
@@ -62,7 +66,7 @@ public class PdfService {
 
             agregarCabecera(doc, fontNegrita, fontNormal, "ALBARÁN DE SALIDA", numero,
                 evento.getFechaInicio().format(FORMATO_FECHA));
-            agregarDatosEventoYCliente(doc, fontNegrita, fontNormal, evento);
+            agregarDatosEventoYCliente(doc, fontNegrita, fontNormal, evento, trabajador);
             agregarTablaLineas(doc, fontNegrita, fontNormal, evento.getLineas(), false);
             agregarSeccionFirmas(doc, fontNormal);
             agregarPieDocumento(doc, fontNormal);
@@ -75,7 +79,7 @@ public class PdfService {
         return rutaCompleta;
     }
 
-    public String generarAlbaranDevolucion(Evento evento, List<LineaEvento> lineas, String numero) {
+    public String generarAlbaranDevolucion(Evento evento, List<LineaEvento> lineas, String numero, Trabajador trabajador) {
         String nombreArchivo = numero + ".pdf";
         String rutaCompleta = prepararDirectorio(nombreArchivo);
 
@@ -89,7 +93,7 @@ public class PdfService {
 
             agregarCabecera(doc, fontNegrita, fontNormal, "ALBARÁN DE DEVOLUCIÓN", numero,
                 java.time.LocalDateTime.now().format(FORMATO_FECHA));
-            agregarDatosEventoYCliente(doc, fontNegrita, fontNormal, evento);
+            agregarDatosEventoYCliente(doc, fontNegrita, fontNormal, evento, trabajador);
             agregarTablaLineas(doc, fontNegrita, fontNormal, lineas, true);
             agregarSeccionFirmas(doc, fontNormal);
             agregarPieDocumento(doc, fontNormal);
@@ -100,6 +104,52 @@ public class PdfService {
         }
 
         return rutaCompleta;
+    }
+
+    public byte[] generarListaCargaEvento(Evento evento) {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        try (PdfWriter writer = new PdfWriter(baos);
+             PdfDocument pdf = new PdfDocument(writer);
+             Document doc = new Document(pdf, PageSize.A4)) {
+
+            doc.setMargins(36, 36, 36, 36);
+            PdfFont fontNormal = PdfFontFactory.createFont(StandardFonts.HELVETICA);
+            PdfFont fontNegrita = PdfFontFactory.createFont(StandardFonts.HELVETICA_BOLD);
+
+            agregarCabecera(doc, fontNegrita, fontNormal, "LISTA DE CARGA",
+                evento.getNombre(), LocalDateTime.now().format(FORMATO_FECHA));
+            agregarDatosEventoYCliente(doc, fontNegrita, fontNormal, evento, evento.getTrabajador());
+            agregarTablaListaCarga(doc, fontNegrita, fontNormal, evento.getLineas());
+            agregarPieDocumento(doc, fontNormal);
+
+        } catch (IOException e) {
+            log.error("Error generando lista de carga para evento {}: {}", evento.getId(), e.getMessage(), e);
+            throw new NegocioException("Error al generar la lista de carga");
+        }
+        return baos.toByteArray();
+    }
+
+    public byte[] generarListadoInventario(List<Material> materiales, EstadoMaterial estado, String busqueda) {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        try (PdfWriter writer = new PdfWriter(baos);
+             PdfDocument pdf = new PdfDocument(writer);
+             Document doc = new Document(pdf, PageSize.A4)) {
+
+            doc.setMargins(36, 36, 36, 36);
+            PdfFont fontNormal = PdfFontFactory.createFont(StandardFonts.HELVETICA);
+            PdfFont fontNegrita = PdfFontFactory.createFont(StandardFonts.HELVETICA_BOLD);
+
+            String fecha = LocalDateTime.now().format(FORMATO_FECHA);
+            agregarCabecera(doc, fontNegrita, fontNormal, "LISTADO DE INVENTARIO", "", fecha);
+            agregarFiltrosAplicados(doc, fontNormal, estado, busqueda, materiales.size());
+            agregarTablaInventario(doc, fontNegrita, fontNormal, materiales);
+            agregarPieDocumento(doc, fontNormal);
+
+        } catch (IOException e) {
+            log.error("Error generando listado de inventario: {}", e.getMessage(), e);
+            throw new NegocioException("Error al generar el listado de inventario");
+        }
+        return baos.toByteArray();
     }
 
     public byte[] leerPdf(String rutaPdf) {
@@ -139,8 +189,10 @@ public class PdfService {
         celdaAlbaran.add(new Paragraph(tipoAlbaran)
             .setFont(fontNegrita).setFontSize(16)
             .setFontColor(COLOR_CABECERA));
-        celdaAlbaran.add(new Paragraph("Nº: " + numero)
-            .setFont(fontNegrita).setFontSize(11));
+        if (numero != null && !numero.isBlank()) {
+            celdaAlbaran.add(new Paragraph("Nº: " + numero)
+                .setFont(fontNegrita).setFontSize(11));
+        }
         celdaAlbaran.add(new Paragraph("Fecha: " + fecha)
             .setFont(fontNormal).setFontSize(9));
 
@@ -167,7 +219,7 @@ public class PdfService {
     }
 
     private void agregarDatosEventoYCliente(Document doc, PdfFont fontNegrita, PdfFont fontNormal,
-                                             Evento evento) {
+                                             Evento evento, Trabajador trabajador) {
         Table tablaInfo = new Table(UnitValue.createPercentArray(new float[]{50, 50}))
             .setWidth(UnitValue.createPercentValue(100))
             .setMarginBottom(12);
@@ -192,9 +244,8 @@ public class PdfService {
             celdaEvento.add(linea(fontNegrita, fontNormal, "Lugar: ", evento.getLugar()));
         celdaEvento.add(linea(fontNegrita, fontNormal, "Fecha inicio: ",
             evento.getFechaInicio().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"))));
-        if (evento.getTecnicoResponsable() != null)
-            celdaEvento.add(linea(fontNegrita, fontNormal, "Técnico: ",
-                evento.getTecnicoResponsable().getNombre()));
+        if (trabajador != null)
+            celdaEvento.add(linea(fontNegrita, fontNormal, "Responsable: ", trabajador.getNombre()));
 
         tablaInfo.addCell(celdaCliente);
         tablaInfo.addCell(celdaEvento);
@@ -301,6 +352,87 @@ public class PdfService {
             .setBackgroundColor(fondo)
             .add(new Paragraph(texto).setFont(font).setFontSize(8))
             .setPadding(3);
+    }
+
+    private void agregarTablaListaCarga(Document doc, PdfFont fontNegrita, PdfFont fontNormal,
+                                          List<LineaEvento> lineas) {
+        doc.add(new Paragraph("MATERIAL ASIGNADO")
+            .setFont(fontNegrita).setFontSize(10)
+            .setFontColor(COLOR_CABECERA).setMarginBottom(4));
+
+        Table tabla = new Table(UnitValue.createPercentArray(new float[]{4, 32, 20, 18, 16, 10}))
+            .setWidth(UnitValue.createPercentValue(100));
+
+        for (String cab : new String[]{"Nº", "Descripción", "Marca / Modelo", "Nº Serie", "Categoría", "Cant."}) {
+            tabla.addHeaderCell(new Cell()
+                .setBackgroundColor(COLOR_CABECERA)
+                .add(new Paragraph(cab).setFont(fontNegrita).setFontSize(8).setFontColor(ColorConstants.WHITE))
+                .setPadding(4));
+        }
+
+        for (int i = 0; i < lineas.size(); i++) {
+            LineaEvento l = lineas.get(i);
+            DeviceRgb fondo = i % 2 == 0 ? new DeviceRgb(255, 255, 255) : COLOR_FILA_PAR;
+            String marcaModelo = "";
+            if (l.getMaterial().getMarca() != null) marcaModelo += l.getMaterial().getMarca();
+            if (l.getMaterial().getModelo() != null) marcaModelo += (marcaModelo.isEmpty() ? "" : " ") + l.getMaterial().getModelo();
+
+            tabla.addCell(celda(fontNormal, String.valueOf(i + 1), fondo));
+            tabla.addCell(celda(fontNormal, l.getMaterial().getNombre(), fondo));
+            tabla.addCell(celda(fontNormal, marcaModelo.isEmpty() ? "—" : marcaModelo, fondo));
+            tabla.addCell(celda(fontNormal, l.getMaterial().getNumeroSerie() != null ? l.getMaterial().getNumeroSerie() : "—", fondo));
+            tabla.addCell(celda(fontNormal, l.getMaterial().getCategoria().getNombre(), fondo));
+            tabla.addCell(celda(fontNormal, String.valueOf(l.getCantidad()), fondo));
+        }
+
+        doc.add(tabla.setMarginBottom(16));
+        doc.add(new Paragraph("Total: " + lineas.size() + " ítem(s)")
+            .setFont(fontNegrita).setFontSize(9).setTextAlignment(TextAlignment.RIGHT));
+    }
+
+    private void agregarFiltrosAplicados(Document doc, PdfFont fontNormal,
+                                          EstadoMaterial estado, String busqueda, int total) {
+        StringBuilder sb = new StringBuilder("Generado el " + LocalDateTime.now().format(FORMATO_FECHA));
+        if (estado != null) sb.append("  |  Estado: ").append(estado.name());
+        if (busqueda != null && !busqueda.isBlank()) sb.append("  |  Búsqueda: \"").append(busqueda).append("\"");
+        sb.append("  |  Total: ").append(total).append(" ítem(s)");
+
+        doc.add(new Paragraph(sb.toString())
+            .setFont(fontNormal).setFontSize(8)
+            .setFontColor(ColorConstants.GRAY).setMarginBottom(10));
+    }
+
+    private void agregarTablaInventario(Document doc, PdfFont fontNegrita, PdfFont fontNormal,
+                                         List<Material> materiales) {
+        Table tabla = new Table(UnitValue.createPercentArray(new float[]{4, 26, 14, 11, 18, 18, 9}))
+            .setWidth(UnitValue.createPercentValue(100));
+
+        for (String cab : new String[]{"Nº", "Descripción", "Categoría", "Estado", "Marca", "Nº Serie", "Cant."}) {
+            tabla.addHeaderCell(new Cell()
+                .setBackgroundColor(COLOR_CABECERA)
+                .add(new Paragraph(cab).setFont(fontNegrita).setFontSize(8).setFontColor(ColorConstants.WHITE))
+                .setPadding(4));
+        }
+
+        for (int i = 0; i < materiales.size(); i++) {
+            Material m = materiales.get(i);
+            DeviceRgb fondo = i % 2 == 0 ? new DeviceRgb(255, 255, 255) : COLOR_FILA_PAR;
+            String marcaModelo = "";
+            if (m.getMarca() != null) marcaModelo += m.getMarca();
+            if (m.getModelo() != null) marcaModelo += (marcaModelo.isEmpty() ? "" : " ") + m.getModelo();
+
+            tabla.addCell(celda(fontNormal, String.valueOf(i + 1), fondo));
+            tabla.addCell(celda(fontNormal, m.getNombre(), fondo));
+            tabla.addCell(celda(fontNormal, m.getCategoria().getNombre(), fondo));
+            tabla.addCell(celda(fontNormal, m.getEstado().name(), fondo));
+            tabla.addCell(celda(fontNormal, marcaModelo.isEmpty() ? "—" : marcaModelo, fondo));
+            tabla.addCell(celda(fontNormal, m.getNumeroSerie() != null ? m.getNumeroSerie() : "—", fondo));
+            tabla.addCell(celda(fontNormal, String.valueOf(m.getCantidad()), fondo));
+        }
+
+        doc.add(tabla.setMarginBottom(12));
+        doc.add(new Paragraph("Total: " + materiales.size() + " ítem(s)")
+            .setFont(fontNegrita).setFontSize(9).setTextAlignment(TextAlignment.RIGHT));
     }
 
     private String prepararDirectorio(String nombreArchivo) {

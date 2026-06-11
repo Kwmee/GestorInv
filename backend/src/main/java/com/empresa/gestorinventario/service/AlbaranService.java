@@ -7,6 +7,7 @@ import com.empresa.gestorinventario.model.dto.response.PaginaResponse;
 import com.empresa.gestorinventario.model.entity.Albaran;
 import com.empresa.gestorinventario.model.entity.Evento;
 import com.empresa.gestorinventario.model.entity.LineaEvento;
+import com.empresa.gestorinventario.model.entity.Trabajador;
 import com.empresa.gestorinventario.model.enums.TipoAlbaran;
 import com.empresa.gestorinventario.repository.AlbaranRepository;
 import lombok.RequiredArgsConstructor;
@@ -51,14 +52,15 @@ public class AlbaranService {
     }
 
     @Transactional
-    public AlbaranResponse generarAlbaranSalida(Evento evento) {
+    public AlbaranResponse generarAlbaranSalida(Evento evento, Trabajador trabajador) {
         String numero = generarNumero(TipoAlbaran.SALIDA);
-        String rutaPdf = pdfService.generarAlbaranSalida(evento, numero);
+        String rutaPdf = pdfService.generarAlbaranSalida(evento, numero, trabajador);
 
         Albaran albaran = Albaran.builder()
             .evento(evento)
             .numero(numero)
             .tipo(TipoAlbaran.SALIDA)
+            .trabajador(trabajador)
             .rutaPdf(rutaPdf)
             .build();
 
@@ -67,7 +69,8 @@ public class AlbaranService {
 
     @Transactional
     public AlbaranResponse generarAlbaranDevolucion(Evento evento,
-            List<DevolucionRequest.LineaDevolucionRequest> lineasDevolucion) {
+            List<DevolucionRequest.LineaDevolucionRequest> lineasDevolucion,
+            Trabajador trabajador) {
         String numero = generarNumero(TipoAlbaran.DEVOLUCION);
 
         List<LineaEvento> lineasDevueltas = evento.getLineas().stream()
@@ -75,12 +78,13 @@ public class AlbaranService {
                 .anyMatch(req -> req.getMaterialId().equals(l.getMaterial().getId())))
             .toList();
 
-        String rutaPdf = pdfService.generarAlbaranDevolucion(evento, lineasDevueltas, numero);
+        String rutaPdf = pdfService.generarAlbaranDevolucion(evento, lineasDevueltas, numero, trabajador);
 
         Albaran albaran = Albaran.builder()
             .evento(evento)
             .numero(numero)
             .tipo(TipoAlbaran.DEVOLUCION)
+            .trabajador(trabajador)
             .rutaPdf(rutaPdf)
             .build();
 
@@ -113,6 +117,7 @@ public class AlbaranService {
             .fechaEmision(a.getFechaEmision())
             .eventoId(a.getEvento().getId())
             .eventoNombre(a.getEvento().getNombre())
+            .trabajadorNombre(a.getTrabajador() != null ? a.getTrabajador().getNombre() : null)
             .pdfUrl("/albaranes/" + a.getId() + "/pdf")
             .build();
     }

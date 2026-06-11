@@ -1,7 +1,7 @@
 import { NavLink } from 'react-router-dom'
 import {
   LayoutDashboard, Package, Users, CalendarDays,
-  FileText, LogOut, Settings, Sun, Moon, Building2,
+  FileText, LogOut, Settings, Sun, Moon, Building2, HardHat,
 } from 'lucide-react'
 import clsx from 'clsx'
 import { useAuthStore } from '@/store/authStore'
@@ -12,7 +12,8 @@ const nav = [
   { to: '/inventario',label: 'Inventario', icono: Package },
   { to: '/clientes',  label: 'Clientes',   icono: Users },
   { to: '/eventos',   label: 'Eventos',    icono: CalendarDays },
-  { to: '/albaranes', label: 'Albaranes',  icono: FileText },
+  { to: '/albaranes',    label: 'Albaranes',    icono: FileText },
+  { to: '/trabajadores', label: 'Trabajadores', icono: HardHat },
 ]
 
 export function Sidebar() {

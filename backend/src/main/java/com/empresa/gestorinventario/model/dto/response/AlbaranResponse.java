@@ -16,5 +16,6 @@ public class AlbaranResponse {
     private LocalDateTime fechaEmision;
     private Long eventoId;
     private String eventoNombre;
+    private String trabajadorNombre;
     private String pdfUrl;
 }

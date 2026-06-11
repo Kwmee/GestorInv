@@ -9,6 +9,7 @@ import com.empresa.gestorinventario.model.dto.response.AlbaranResponse;
 import com.empresa.gestorinventario.model.dto.response.EventoResponse;
 import com.empresa.gestorinventario.model.dto.response.PaginaResponse;
 import com.empresa.gestorinventario.model.entity.*;
+import com.empresa.gestorinventario.repository.TrabajadorRepository;
 import com.empresa.gestorinventario.model.enums.EstadoDevolucion;
 import com.empresa.gestorinventario.model.enums.EstadoEvento;
 import com.empresa.gestorinventario.model.enums.EstadoMaterial;
@@ -32,8 +33,10 @@ public class EventoService {
     private final EventoRepository eventoRepository;
     private final ClienteRepository clienteRepository;
     private final UsuarioRepository usuarioRepository;
+    private final TrabajadorRepository trabajadorRepository;
     private final MaterialService materialService;
     private final AlbaranService albaranService;
+    private final PdfService pdfService;
 
     public PaginaResponse<EventoResponse> listar(EstadoEvento estado, Long clienteId,
                                                   LocalDateTime fechaDesde, Pageable pageable) {
@@ -58,15 +61,15 @@ public class EventoService {
         Cliente cliente = clienteRepository.findById(request.getClienteId())
             .orElseThrow(() -> new RecursoNoEncontradoException("Cliente", request.getClienteId()));
 
-        Usuario tecnico = null;
-        if (request.getTecnicoResponsableId() != null) {
-            tecnico = usuarioRepository.findById(request.getTecnicoResponsableId())
-                .orElseThrow(() -> new RecursoNoEncontradoException("Usuario", request.getTecnicoResponsableId()));
+        Trabajador trabajador = null;
+        if (request.getTrabajadorId() != null) {
+            trabajador = trabajadorRepository.findById(request.getTrabajadorId())
+                .orElseThrow(() -> new RecursoNoEncontradoException("Trabajador", request.getTrabajadorId()));
         }
 
         Evento evento = Evento.builder()
             .cliente(cliente)
-            .tecnicoResponsable(tecnico)
+            .trabajador(trabajador)
             .nombre(request.getNombre())
             .descripcion(request.getDescripcion())
             .lugar(request.getLugar())
@@ -158,7 +161,7 @@ public class EventoService {
         evento.setEstado(EstadoEvento.ACTIVO);
         eventoRepository.save(evento);
 
-        return albaranService.generarAlbaranSalida(evento);
+        return albaranService.generarAlbaranSalida(evento, evento.getTrabajador());
     }
 
     @Transactional
@@ -200,7 +203,10 @@ public class EventoService {
 
         eventoRepository.save(evento);
 
-        return albaranService.generarAlbaranDevolucion(evento, request.getLineas());
+        Trabajador trabajadorDevolucion = request.getTrabajadorId() != null
+            ? trabajadorRepository.findById(request.getTrabajadorId()).orElse(null)
+            : null;
+        return albaranService.generarAlbaranDevolucion(evento, request.getLineas(), trabajadorDevolucion);
     }
 
     private void agregarLineas(Evento evento, List<EventoRequest.LineaMaterialRequest> lineasRequest) {
@@ -240,6 +246,11 @@ public class EventoService {
         return usuarioRepository.findByEmail(email).orElse(null);
     }
 
+    public byte[] generarListaCarga(Long eventoId) {
+        Evento evento = obtenerEntidad(eventoId);
+        return pdfService.generarListaCargaEvento(evento);
+    }
+
     public Evento obtenerEntidad(Long id) {
         return eventoRepository.findById(id)
             .orElseThrow(() -> new RecursoNoEncontradoException("Evento", id));
@@ -269,10 +280,10 @@ public class EventoService {
                 .email(e.getCliente().getEmail())
                 .direccion(e.getCliente().getDireccion())
                 .build())
-            .tecnicoResponsable(e.getTecnicoResponsable() == null ? null :
-                EventoResponse.UsuarioInfo.builder()
-                    .id(e.getTecnicoResponsable().getId())
-                    .nombre(e.getTecnicoResponsable().getNombre())
+            .trabajador(e.getTrabajador() == null ? null :
+                EventoResponse.TrabajadorInfo.builder()
+                    .id(e.getTrabajador().getId())
+                    .nombre(e.getTrabajador().getNombre())
                     .build())
             .nombre(e.getNombre())
             .descripcion(e.getDescripcion())

@@ -12,7 +12,7 @@ public class EventoRequest {
     @NotNull(message = "El cliente es obligatorio")
     private Long clienteId;
 
-    private Long tecnicoResponsableId;
+    private Long trabajadorId;
 
     @NotBlank(message = "El nombre del evento es obligatorio")
     @Size(max = 200)

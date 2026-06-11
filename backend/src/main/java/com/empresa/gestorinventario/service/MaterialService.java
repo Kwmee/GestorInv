@@ -29,6 +29,7 @@ public class MaterialService {
     private final MaterialRepository materialRepository;
     private final CategoriaMaterialRepository categoriaRepository;
     private final HistorialEstadoRepository historialRepository;
+    private final PdfService pdfService;
 
     public PaginaResponse<MaterialResponse> listar(EstadoMaterial estado, Long categoriaId,
                                                     String busqueda, Pageable pageable) {
@@ -148,6 +149,11 @@ public class MaterialService {
                 .creadoEn(h.getFecha())
                 .build())
             .toList();
+    }
+
+    public byte[] generarListadoPdf(EstadoMaterial estado, Long categoriaId, String busqueda) {
+        List<Material> materiales = materialRepository.buscarParaListado(estado, categoriaId, busqueda);
+        return pdfService.generarListadoInventario(materiales, estado, busqueda);
     }
 
     public Material obtenerEntidad(Long id) {

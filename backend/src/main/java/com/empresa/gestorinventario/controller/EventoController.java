@@ -12,7 +12,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -77,5 +79,15 @@ public class EventoController {
     public ResponseEntity<AlbaranResponse> registrarDevolucion(
             @PathVariable Long id, @Valid @RequestBody DevolucionRequest request) {
         return ResponseEntity.ok(eventoService.registrarDevolucion(id, request));
+    }
+
+    @GetMapping("/{id}/lista-carga")
+    public ResponseEntity<byte[]> listaCarga(@PathVariable Long id) {
+        byte[] pdf = eventoService.generarListaCarga(id);
+        return ResponseEntity.ok()
+            .header(HttpHeaders.CONTENT_DISPOSITION,
+                "attachment; filename=\"lista-carga-" + id + ".pdf\"")
+            .contentType(MediaType.APPLICATION_PDF)
+            .body(pdf);
     }
 }

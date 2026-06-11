@@ -14,7 +14,7 @@ public class EventoResponse {
 
     private Long id;
     private ClienteInfo cliente;
-    private UsuarioInfo tecnicoResponsable;
+    private TrabajadorInfo trabajador;
     private String nombre;
     private String descripcion;
     private String lugar;
@@ -38,7 +38,7 @@ public class EventoResponse {
 
     @Data
     @Builder
-    public static class UsuarioInfo {
+    public static class TrabajadorInfo {
         private Long id;
         private String nombre;
     }

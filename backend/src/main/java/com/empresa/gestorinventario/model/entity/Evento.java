@@ -29,8 +29,8 @@ public class Evento {
     private Cliente cliente;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "tecnico_responsable")
-    private Usuario tecnicoResponsable;
+    @JoinColumn(name = "trabajador_id")
+    private Trabajador trabajador;
 
     @Column(nullable = false, length = 200)
     private String nombre;

@@ -2,6 +2,7 @@ package com.empresa.gestorinventario.config;
 
 import com.empresa.gestorinventario.security.CustomUserDetailsService;
 import com.empresa.gestorinventario.security.JwtAuthenticationFilter;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -39,6 +40,10 @@ public class SecurityConfig {
             .csrf(AbstractHttpConfigurer::disable)
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+            .exceptionHandling(ex -> ex
+                .authenticationEntryPoint((req, res, e) ->
+                    res.sendError(HttpServletResponse.SC_UNAUTHORIZED, "No autenticado"))
+            )
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/auth/login").permitAll()
                 .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()

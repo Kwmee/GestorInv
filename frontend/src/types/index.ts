@@ -38,6 +38,12 @@ export interface Material {
   actualizadoEn: string
 }
 
+export interface Trabajador {
+  id: number
+  nombre: string
+  activo: boolean
+}
+
 export interface Cliente {
   id: number
   razonSocial: string
@@ -70,7 +76,7 @@ export interface Evento {
     email?: string
     direccion?: string
   }
-  tecnicoResponsable?: { id: number; nombre: string }
+  trabajador?: { id: number; nombre: string }
   nombre: string
   descripcion?: string
   lugar?: string
@@ -134,7 +140,7 @@ export interface LineaMaterialRequest {
 
 export interface EventoRequest {
   clienteId: number
-  tecnicoResponsableId?: number
+  trabajadorId?: number
   nombre: string
   descripcion?: string
   lugar?: string
@@ -151,6 +157,7 @@ export interface LineaDevolucionRequest {
 }
 
 export interface DevolucionRequest {
+  trabajadorId?: number
   lineas: LineaDevolucionRequest[]
 }
 

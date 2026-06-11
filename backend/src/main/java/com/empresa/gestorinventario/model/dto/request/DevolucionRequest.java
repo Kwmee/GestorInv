@@ -10,6 +10,8 @@ import java.util.List;
 @Data
 public class DevolucionRequest {
 
+    private Long trabajadorId;
+
     @NotEmpty(message = "Debe incluir al menos una línea de devolución")
     private List<LineaDevolucionRequest> lineas;
 

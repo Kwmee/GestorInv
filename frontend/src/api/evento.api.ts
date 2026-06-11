@@ -36,4 +36,7 @@ export const eventoApi = {
 
   registrarDevolucion: (id: number, data: DevolucionRequest) =>
     axiosClient.post<Albaran>(`/eventos/${id}/devolucion`, data).then((r) => r.data),
+
+  listaCarga: (id: number) =>
+    axiosClient.get(`/eventos/${id}/lista-carga`, { responseType: 'blob' }).then((r) => r.data as Blob),
 }

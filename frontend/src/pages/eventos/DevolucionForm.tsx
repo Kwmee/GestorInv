@@ -1,7 +1,8 @@
 import { useState } from 'react'
-import { useMutation } from '@tanstack/react-query'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import toast from 'react-hot-toast'
 import { eventoApi } from '@/api/evento.api'
+import { trabajadorApi } from '@/api/trabajador.api'
 import { Button } from '@/components/ui/Button'
 import { EstadoBadge } from '@/components/ui/EstadoBadge'
 import type { DevolucionRequest, Evento, EstadoDevolucion } from '@/types'
@@ -22,6 +23,12 @@ interface LineaDevolucion {
 
 export function DevolucionForm({ evento, onExito }: Props) {
   const lineasPendientes = evento.lineas.filter((l) => l.estadoDevolucion === 'PENDIENTE')
+  const [trabajadorId, setTrabajadorId] = useState<number | undefined>()
+
+  const { data: trabajadores } = useQuery({
+    queryKey: ['trabajadores'],
+    queryFn: trabajadorApi.listar,
+  })
 
   const [lineas, setLineas] = useState<LineaDevolucion[]>(
     lineasPendientes.map((l) => ({
@@ -50,9 +57,12 @@ export function DevolucionForm({ evento, onExito }: Props) {
   }
 
   const onSubmit = () => {
-    mutate({ lineas: lineas.map(({ materialId, estadoDevolucion, observaciones }) => ({
-      materialId, estadoDevolucion, observaciones: observaciones || undefined,
-    })) })
+    mutate({
+      trabajadorId,
+      lineas: lineas.map(({ materialId, estadoDevolucion, observaciones }) => ({
+        materialId, estadoDevolucion, observaciones: observaciones || undefined,
+      })),
+    })
   }
 
   if (lineasPendientes.length === 0) {
@@ -72,6 +82,22 @@ export function DevolucionForm({ evento, onExito }: Props) {
 
   return (
     <div className="space-y-4">
+      <div className="space-y-1">
+        <label className="text-sm font-medium text-gray-700 dark:text-zinc-300 block">
+          Quién hace la devolución
+        </label>
+        <select
+          value={trabajadorId ?? ''}
+          onChange={(e) => setTrabajadorId(e.target.value ? Number(e.target.value) : undefined)}
+          className="w-full rounded-md border border-gray-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-gray-900 dark:text-zinc-100 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+        >
+          <option value="">Sin asignar</option>
+          {trabajadores?.map((t) => (
+            <option key={t.id} value={t.id}>{t.nombre}</option>
+          ))}
+        </select>
+      </div>
+
       <p className="text-sm text-gray-600 dark:text-zinc-400">
         Indica el estado de devolución de cada ítem. Se generará automáticamente el albarán de devolución.
       </p>

@@ -33,6 +33,10 @@ public class Albaran {
     @Builder.Default
     private LocalDateTime fechaEmision = LocalDateTime.now();
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "trabajador_id")
+    private Trabajador trabajador;
+
     @Column(name = "ruta_pdf", length = 500)
     private String rutaPdf;
 

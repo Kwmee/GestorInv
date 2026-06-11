@@ -11,7 +11,9 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -67,5 +69,17 @@ public class MaterialController {
     @GetMapping("/categorias")
     public ResponseEntity<List<CategoriaMaterial>> listarCategorias() {
         return ResponseEntity.ok(categoriaRepository.findAll());
+    }
+
+    @GetMapping("/listado-pdf")
+    public ResponseEntity<byte[]> listadoPdf(
+            @RequestParam(required = false) EstadoMaterial estado,
+            @RequestParam(required = false) Long categoriaId,
+            @RequestParam(required = false) String q) {
+        byte[] pdf = materialService.generarListadoPdf(estado, categoriaId, q);
+        return ResponseEntity.ok()
+            .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"inventario.pdf\"")
+            .contentType(MediaType.APPLICATION_PDF)
+            .body(pdf);
     }
 }

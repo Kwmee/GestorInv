@@ -6,6 +6,7 @@ import { Plus, Trash2 } from 'lucide-react'
 import { eventoApi } from '@/api/evento.api'
 import { clienteApi } from '@/api/cliente.api'
 import { materialApi } from '@/api/material.api'
+import { trabajadorApi } from '@/api/trabajador.api'
 import { Input } from '@/components/ui/Input'
 import { Select } from '@/components/ui/Select'
 import { Button } from '@/components/ui/Button'
@@ -25,6 +26,11 @@ export function EventoForm({ onExito }: Props) {
   const { data: clientes } = useQuery({
     queryKey: ['clientes-select'],
     queryFn: () => clienteApi.listar(undefined, 0, 100),
+  })
+
+  const { data: trabajadores } = useQuery({
+    queryKey: ['trabajadores'],
+    queryFn: trabajadorApi.listar,
   })
 
   const { data: materialDisponible } = useQuery({
@@ -60,6 +66,7 @@ export function EventoForm({ onExito }: Props) {
   const onSubmit = (data: EventoRequest) => {
     mutate({
       ...data,
+      trabajadorId: data.trabajadorId && !isNaN(data.trabajadorId) ? data.trabajadorId : undefined,
       lineas: lineas.map(({ materialId, cantidad, observaciones }) => ({
         materialId, cantidad, observaciones,
       })),
@@ -86,6 +93,16 @@ export function EventoForm({ onExito }: Props) {
           <option value="">Seleccionar cliente...</option>
           {clientes?.contenido.map((c) => (
             <option key={c.id} value={c.id}>{c.razonSocial}</option>
+          ))}
+        </Select>
+
+        <Select
+          label="Responsable"
+          {...register('trabajadorId', { valueAsNumber: true })}
+        >
+          <option value="">Sin asignar</option>
+          {trabajadores?.map((t) => (
+            <option key={t.id} value={t.id}>{t.nombre}</option>
           ))}
         </Select>
 

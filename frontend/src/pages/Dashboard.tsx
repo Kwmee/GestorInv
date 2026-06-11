@@ -41,7 +41,7 @@ export function Dashboard() {
     queryKey: ['dashboard'],
     queryFn: dashboardApi.resumen,
     refetchInterval: 60_000,
-    retry: 5,
+    retry: (count, error: any) => count < 3 && !(error?.response?.status < 500),
     retryDelay: 3000,
   })
 

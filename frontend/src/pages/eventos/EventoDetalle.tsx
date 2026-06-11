@@ -2,7 +2,8 @@ import { useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import toast from 'react-hot-toast'
-import { ArrowLeft, FileDown, Truck, RotateCcw, Plus, Trash2 } from 'lucide-react'
+import { ArrowLeft, FileDown, Truck, RotateCcw, Plus, Trash2, ClipboardList } from 'lucide-react'
+import { descargarBlob } from '@/lib/descargar'
 import { eventoApi } from '@/api/evento.api'
 import { materialApi } from '@/api/material.api'
 import { albaranApi } from '@/api/albaran.api'
@@ -68,15 +69,19 @@ export function EventoDetalle() {
     onError: (err: any) => toast.error(err.response?.data?.mensaje ?? 'Error'),
   })
 
+  const descargarListaCarga = async () => {
+    try {
+      const blob = await eventoApi.listaCarga(eventoId)
+      descargarBlob(blob, `lista-carga-${evento?.nombre ?? eventoId}.pdf`)
+    } catch {
+      toast.error('No se pudo generar la lista de carga')
+    }
+  }
+
   const descargarAlbaran = async (albaranId: number, numero: string) => {
     try {
       const blob = await albaranApi.descargarPdf(albaranId)
-      const url = URL.createObjectURL(blob)
-      const a = document.createElement('a')
-      a.href = url
-      a.download = `${numero}.pdf`
-      a.click()
-      URL.revokeObjectURL(url)
+      descargarBlob(blob, `${numero}.pdf`)
     } catch {
       toast.error('No se pudo descargar el albarán')
     }
@@ -113,6 +118,12 @@ export function EventoDetalle() {
         </div>
 
         <div className="flex gap-2">
+          {evento.lineas.length > 0 && (
+            <Button variante="secundario" onClick={descargarListaCarga}>
+              <ClipboardList className="h-4 w-4" />
+              Lista de carga
+            </Button>
+          )}
           {esPlanificado && (
             <>
               <Button variante="secundario" onClick={() => setModalAnadirMaterial(true)}>
@@ -140,7 +151,7 @@ export function EventoDetalle() {
           { label: 'Cliente', valor: evento.cliente.razonSocial },
           { label: 'Fecha inicio', valor: formatFecha(evento.fechaInicio) },
           { label: 'Fecha fin', valor: evento.fechaFin ? formatFecha(evento.fechaFin) : '—' },
-          { label: 'Técnico', valor: evento.tecnicoResponsable?.nombre ?? '—' },
+          { label: 'Responsable', valor: evento.trabajador?.nombre ?? '—' },
         ].map(({ label, valor }) => (
           <div key={label} className="bg-white dark:bg-zinc-900 rounded-xl border border-gray-100 dark:border-zinc-800 shadow-sm p-4">
             <p className="text-xs text-gray-500 dark:text-zinc-400">{label}</p>

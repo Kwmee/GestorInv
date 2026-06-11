@@ -22,6 +22,12 @@ CREATE TABLE IF NOT EXISTS usuarios (
     updated_at    DATETIME      NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB;
 
+CREATE TABLE IF NOT EXISTS trabajadores (
+    id     BIGINT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(100) NOT NULL,
+    activo BOOLEAN      NOT NULL DEFAULT TRUE
+) ENGINE=InnoDB;
+
 CREATE TABLE IF NOT EXISTS clientes (
     id           BIGINT AUTO_INCREMENT PRIMARY KEY,
     razon_social VARCHAR(200) NOT NULL,
@@ -68,7 +74,7 @@ CREATE TABLE IF NOT EXISTS material (
 CREATE TABLE IF NOT EXISTS eventos (
     id                   BIGINT AUTO_INCREMENT PRIMARY KEY,
     cliente_id           BIGINT       NOT NULL,
-    tecnico_responsable  BIGINT,
+    trabajador_id        BIGINT,
     nombre               VARCHAR(200) NOT NULL,
     descripcion          TEXT,
     lugar                VARCHAR(300),
@@ -79,7 +85,7 @@ CREATE TABLE IF NOT EXISTS eventos (
     created_at           DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at           DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     CONSTRAINT fk_evento_cliente  FOREIGN KEY (cliente_id)         REFERENCES clientes(id),
-    CONSTRAINT fk_evento_tecnico  FOREIGN KEY (tecnico_responsable) REFERENCES usuarios(id),
+    CONSTRAINT fk_evento_trabajador FOREIGN KEY (trabajador_id) REFERENCES trabajadores(id),
     INDEX idx_evento_estado (estado),
     INDEX idx_evento_cliente (cliente_id)
 ) ENGINE=InnoDB;
@@ -99,12 +105,14 @@ CREATE TABLE IF NOT EXISTS lineas_evento (
 CREATE TABLE IF NOT EXISTS albaranes (
     id             BIGINT AUTO_INCREMENT PRIMARY KEY,
     evento_id      BIGINT       NOT NULL,
+    trabajador_id  BIGINT,
     numero         VARCHAR(20)  NOT NULL UNIQUE,
     tipo           ENUM('SALIDA','DEVOLUCION') NOT NULL,
     fecha_emision  DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
     ruta_pdf       VARCHAR(500),
     created_at     DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT fk_albaran_evento FOREIGN KEY (evento_id) REFERENCES eventos(id),
+    CONSTRAINT fk_albaran_evento      FOREIGN KEY (evento_id)     REFERENCES eventos(id),
+    CONSTRAINT fk_albaran_trabajador  FOREIGN KEY (trabajador_id) REFERENCES trabajadores(id),
     INDEX idx_albaran_tipo (tipo)
 ) ENGINE=InnoDB;
 

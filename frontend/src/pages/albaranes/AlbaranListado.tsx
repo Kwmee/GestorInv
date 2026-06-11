@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import toast from 'react-hot-toast'
+import { descargarBlob } from '@/lib/descargar'
 import { FileDown, FileText } from 'lucide-react'
 import { albaranApi } from '@/api/albaran.api'
 import { Select } from '@/components/ui/Select'
@@ -22,12 +23,7 @@ export function AlbaranListado() {
   const descargar = async (id: number, numero: string) => {
     try {
       const blob = await albaranApi.descargarPdf(id)
-      const url = URL.createObjectURL(blob)
-      const a = document.createElement('a')
-      a.href = url
-      a.download = `${numero}.pdf`
-      a.click()
-      URL.revokeObjectURL(url)
+      descargarBlob(blob, `${numero}.pdf`)
     } catch {
       toast.error('Error al descargar el PDF')
     }
