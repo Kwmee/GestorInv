@@ -40,8 +40,8 @@ import java.util.List;
 public class PdfService {
 
     private static final DateTimeFormatter FORMATO_FECHA = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
-    private static final DeviceRgb COLOR_CABECERA = new DeviceRgb(30, 64, 118);
-    private static final DeviceRgb COLOR_FILA_PAR  = new DeviceRgb(240, 244, 250);
+    private static final DeviceRgb COLOR_CABECERA = new DeviceRgb(35, 35, 35);
+    private static final DeviceRgb COLOR_FILA_PAR  = new DeviceRgb(245, 245, 245);
 
     @Value("${app.albaranes.ruta-almacenamiento}")
     private String rutaAlmacenamiento;
