@@ -50,7 +50,7 @@ INSERT IGNORE INTO material (categoria_id, nombre, marca, modelo, numero_serie, 
 (1, 'Consola Monitores',      'Yamaha',           'PM5D',     'PA-PM5D-001', 1,  'DISPONIBLE', 12000.00,FALSE, 0),
 (1, 'Microfono SM58',         'Shure',            'SM58',     NULL,          12, 'DISPONIBLE', 120.00,  FALSE, 4),
 (1, 'DI Box Activa',          'BSS',              'AR133',    NULL,          8,  'DISPONIBLE', 180.00,  FALSE, 2),
-(1, 'Amplificador D80',       'd&b audiotechnik', 'D80',      'PA-D80-001',  4,  'DISPONIBLE', 4200.00, FALSE, 0),
+(1, 'Amplificador Potencia D80','d&b audiotechnik', 'D80',     'PA-D80-001',  4,  'DISPONIBLE', 4200.00, FALSE, 0),
 (1, 'Microfono Inalambrico',  'Sennheiser',       'EW 500',   'PA-SENNH-001',4,  'DISPONIBLE', 850.00,  FALSE, 2),
 (1, 'Procesador DriveRack',   'dbx',              'DriveRack 260','PA-DBX-001',1, 'DISPONIBLE',1100.00, FALSE, 0),
 (1, 'Subwoofer KS28',         'L-Acoustics',      'KS28',     'PA-KS28-001', 4,  'DISPONIBLE', 5500.00, FALSE, 1),
@@ -75,13 +75,13 @@ INSERT IGNORE INTO material (categoria_id, nombre, marca, modelo, numero_serie, 
 -- MATERIAL — Backline
 -- ------------------------------------------------------------
 INSERT IGNORE INTO material (categoria_id, nombre, marca, modelo, numero_serie, cantidad, estado, valor_unitario, es_fungible, stock_minimo) VALUES
-(3, 'Amplificador Guitarra',  'Marshall',    'JVM410H',    'BL-MARSH-001',  2, 'DISPONIBLE', 1600.00, FALSE, 0),
-(3, 'Amplificador Bajo',      'Ampeg',       'SVT-4PRO',   'BL-AMPEG-001',  1, 'DISPONIBLE', 2100.00, FALSE, 0),
+(3, 'Stack Guitarra Marshall', 'Marshall',    'JVM410H',    'BL-MARSH-001',  2, 'DISPONIBLE', 1600.00, FALSE, 0),
+(3, 'Stack Bajo Ampeg',       'Ampeg',       'SVT-4PRO',   'BL-AMPEG-001',  1, 'DISPONIBLE', 2100.00, FALSE, 0),
 (3, 'Bateria Acustica',       'Pearl',       'Export EXX', 'BL-PEARL-001',  1, 'DISPONIBLE', 900.00,  FALSE, 0),
 (3, 'Piano de Escenario',     'Nord',        'Stage 4',    'BL-NORD-001',   1, 'DISPONIBLE', 3200.00, FALSE, 0),
 (3, 'Controlador DJ',         'Pioneer',     'CDJ-3000',   'BL-CDJ-001',    2, 'DISPONIBLE', 2400.00, FALSE, 0),
 (3, 'Mezclador DJ',           'Pioneer',     'DJM-900NXS2','BL-DJM-001',    1, 'DISPONIBLE', 2100.00, FALSE, 0),
-(3, 'Amplificador Guitarra 2','Fender',      'Twin Reverb','BL-FEND-001',   1, 'DISPONIBLE', 1800.00, FALSE, 0);
+(3, 'Combo Guitarra Fender',  'Fender',      'Twin Reverb','BL-FEND-001',   1, 'DISPONIBLE', 1800.00, FALSE, 0);
 
 -- ------------------------------------------------------------
 -- MATERIAL — Cables
@@ -115,6 +115,16 @@ INSERT IGNORE INTO material (categoria_id, nombre, marca, modelo, numero_serie, 
 (6, 'Cinta Americana',  'Tesa',     NULL, NULL, 30,  'DISPONIBLE', 4.50, TRUE, 10),
 (6, 'Cinta Gaffer',     'Pro Gaff', NULL, NULL, 20,  'DISPONIBLE', 8.00, TRUE, 5),
 (6, 'Foam Microfono',   'Generico', NULL, NULL, 100, 'DISPONIBLE', 0.30, TRUE, 20);
+
+-- ------------------------------------------------------------
+-- MATERIAL — Video
+-- ------------------------------------------------------------
+INSERT IGNORE INTO categorias_material (id, nombre) VALUES (7, 'Video');
+INSERT IGNORE INTO material (categoria_id, nombre, marca, modelo, numero_serie, cantidad, estado, valor_unitario, es_fungible, stock_minimo) VALUES
+(7, 'Procesador Video Resolume', 'Resolume', 'Avenue 7',         'VID-RES-001',  1, 'DISPONIBLE', 2400.00, FALSE, 0),
+(7, 'Projector 10000 lm',        'Panasonic', 'PT-RZ14K',        'VID-PANA-001', 2, 'DISPONIBLE', 12000.00,FALSE, 0),
+(7, 'Conversor SDI-HDMI',        'Blackmagic', 'Micro Converter', 'VID-BM-001',  4, 'DISPONIBLE', 280.00,  FALSE, 1),
+(7, 'Switcher Video HDMI 4x1',   'Kramer',    'VS-411X',         'VID-KRM-001',  2, 'DISPONIBLE', 450.00,  FALSE, 0);
 
 -- ------------------------------------------------------------
 -- EVENTOS
@@ -447,11 +457,11 @@ INSERT IGNORE INTO clientes (razon_social, nif_cif, telefono, email, direccion, 
 -- MATERIAL adicional — PA
 -- ------------------------------------------------------------
 INSERT IGNORE INTO material (categoria_id, nombre, marca, modelo, numero_serie, cantidad, estado, valor_unitario, es_fungible, stock_minimo) VALUES
-(1, 'Line Array V-DOSC',      'L-Acoustics',      'V-DOSC',     'PA-VDOSC-001', 8,  'DISPONIBLE', 4800.00, FALSE, 2),
+(1, 'Pantalla LED Frontal 4x3','Absen',            'PL2.5 Pro',  'VID-LED-001',  1,  'DISPONIBLE', 8500.00, FALSE, 0),
 (1, 'Consola Digital X32',    'Behringer',        'X32',        'PA-X32-001',   2,  'DISPONIBLE', 2800.00, FALSE, 0),
-(1, 'Subwoofer SB28',         'L-Acoustics',      'SB28',       'PA-SB28-001',  4,  'DISPONIBLE', 4200.00, FALSE, 1),
+(1, 'Procesador Digital BSS', 'BSS',              'BLU-800',    'PA-BSS-001',   1,  'DISPONIBLE', 3800.00, FALSE, 0),
 (1, 'IEM In-Ear Monitor',     'Sennheiser',       'EW 300 IEM', 'PA-IEM-001',   8,  'DISPONIBLE', 1200.00, FALSE, 2),
-(1, 'Altavoz Columna',        'Bose',             'F1 Model 812','PA-BOSE-001', 4,  'DISPONIBLE', 900.00,  FALSE, 0),
+(1, 'Altavoz Columna Bose',   'Bose',             'F1 Model 812','PA-BOSE-001', 4,  'DISPONIBLE', 900.00,  FALSE, 0),
 (1, 'Microfono Condenser',    'Neumann',          'KMS 104',    'PA-NEUM-001',  4,  'DISPONIBLE', 680.00,  FALSE, 1);
 
 -- ------------------------------------------------------------
