@@ -49,9 +49,13 @@ public class RateLimitingFilter implements Filter {
     }
 
     private String getClientIp(HttpServletRequest request) {
+        String realIp = request.getHeader("X-Real-IP");
+        if (realIp != null && !realIp.isBlank()) return realIp.trim();
         String forwarded = request.getHeader("X-Forwarded-For");
-        return (forwarded != null && !forwarded.isBlank())
-            ? forwarded.split(",")[0].trim()
-            : request.getRemoteAddr();
+        if (forwarded != null && !forwarded.isBlank()) {
+            String[] parts = forwarded.split(",");
+            return parts[parts.length - 1].trim(); // último = más cercano al servidor
+        }
+        return request.getRemoteAddr();
     }
 }

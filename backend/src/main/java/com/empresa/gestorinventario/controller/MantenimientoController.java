@@ -6,6 +6,7 @@ import com.empresa.gestorinventario.model.dto.response.MantenimientoResponse;
 import com.empresa.gestorinventario.service.MantenimientoService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -31,6 +32,7 @@ public class MantenimientoController {
     }
 
     @PostMapping
+    @PreAuthorize("hasAnyRole('ADMIN','OPERARIO')")
     public ResponseEntity<MantenimientoResponse> crear(
             @Valid @RequestBody MantenimientoRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED)
@@ -38,6 +40,7 @@ public class MantenimientoController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN','OPERARIO')")
     public ResponseEntity<MantenimientoResponse> actualizar(
             @PathVariable Long id,
             @Valid @RequestBody MantenimientoRequest request) {
@@ -45,6 +48,7 @@ public class MantenimientoController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> eliminar(@PathVariable Long id) {
         mantenimientoService.eliminar(id);
         return ResponseEntity.noContent().build();

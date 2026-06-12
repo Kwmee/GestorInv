@@ -5,6 +5,7 @@ import com.empresa.gestorinventario.service.TrabajadorService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,11 +27,13 @@ public class TrabajadorController {
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Trabajador> crear(@RequestBody @Valid NombreRequest body) {
         return ResponseEntity.status(HttpStatus.CREATED).body(trabajadorService.crear(body.nombre()));
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> desactivar(@PathVariable Long id) {
         trabajadorService.desactivar(id);
         return ResponseEntity.noContent().build();

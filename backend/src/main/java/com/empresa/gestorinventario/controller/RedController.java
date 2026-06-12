@@ -3,6 +3,7 @@ package com.empresa.gestorinventario.controller;
 import com.empresa.gestorinventario.model.dto.response.RedStatusResponse;
 import com.empresa.gestorinventario.service.RedService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,6 +20,7 @@ public class RedController {
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<RedStatusResponse> cambiarModo(@RequestBody ModoRedRequest request) {
         return ResponseEntity.ok(redService.establecerModo(request.modoRed()));
     }

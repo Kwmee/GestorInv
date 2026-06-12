@@ -8,6 +8,7 @@ import com.empresa.gestorinventario.model.enums.EstadoPresupuesto;
 import com.empresa.gestorinventario.service.PresupuestoService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
@@ -35,6 +36,7 @@ public class PresupuestoController {
     }
 
     @PostMapping
+    @PreAuthorize("hasAnyRole('ADMIN','OPERARIO')")
     public ResponseEntity<PresupuestoResponse> crear(
             @Valid @RequestBody PresupuestoRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED)
@@ -42,6 +44,7 @@ public class PresupuestoController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN','OPERARIO')")
     public ResponseEntity<PresupuestoResponse> actualizar(
             @PathVariable Long id,
             @Valid @RequestBody PresupuestoRequest request) {
@@ -49,6 +52,7 @@ public class PresupuestoController {
     }
 
     @PatchMapping("/{id}/estado")
+    @PreAuthorize("hasAnyRole('ADMIN','OPERARIO')")
     public ResponseEntity<PresupuestoResponse> cambiarEstado(
             @PathVariable Long id,
             @RequestParam EstadoPresupuesto estado) {
@@ -56,6 +60,7 @@ public class PresupuestoController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> eliminar(@PathVariable Long id) {
         presupuestoService.eliminar(id);
         return ResponseEntity.noContent().build();

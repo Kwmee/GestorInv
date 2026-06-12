@@ -7,6 +7,7 @@ import com.empresa.gestorinventario.model.dto.response.PaginaResponse;
 import com.empresa.gestorinventario.service.ClienteService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
@@ -38,17 +39,20 @@ public class ClienteController {
     }
 
     @PostMapping
+    @PreAuthorize("hasAnyRole('ADMIN','OPERARIO')")
     public ResponseEntity<ClienteResponse> crear(@Valid @RequestBody ClienteRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(clienteService.crear(request));
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN','OPERARIO')")
     public ResponseEntity<ClienteResponse> actualizar(
             @PathVariable Long id, @Valid @RequestBody ClienteRequest request) {
         return ResponseEntity.ok(clienteService.actualizar(id, request));
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> desactivar(@PathVariable Long id) {
         clienteService.desactivar(id);
         return ResponseEntity.noContent().build();

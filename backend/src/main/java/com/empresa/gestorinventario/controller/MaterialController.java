@@ -10,6 +10,7 @@ import com.empresa.gestorinventario.repository.CategoriaMaterialRepository;
 import com.empresa.gestorinventario.service.MaterialService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpHeaders;
@@ -46,17 +47,20 @@ public class MaterialController {
     }
 
     @PostMapping
+    @PreAuthorize("hasAnyRole('ADMIN','OPERARIO')")
     public ResponseEntity<MaterialResponse> crear(@Valid @RequestBody MaterialRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(materialService.crear(request));
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN','OPERARIO')")
     public ResponseEntity<MaterialResponse> actualizar(
             @PathVariable Long id, @Valid @RequestBody MaterialRequest request) {
         return ResponseEntity.ok(materialService.actualizar(id, request));
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> darDeBaja(@PathVariable Long id) {
         materialService.darDeBaja(id);
         return ResponseEntity.noContent().build();
@@ -73,6 +77,7 @@ public class MaterialController {
     }
 
     @PutMapping("/bulk-estado")
+    @PreAuthorize("hasAnyRole('ADMIN','OPERARIO')")
     public ResponseEntity<Void> bulkCambiarEstado(@Valid @RequestBody BulkEstadoRequest request) {
         materialService.bulkCambiarEstado(request);
         return ResponseEntity.noContent().build();

@@ -9,6 +9,7 @@ import com.empresa.gestorinventario.model.enums.EstadoEvento;
 import com.empresa.gestorinventario.service.EventoService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -46,17 +47,20 @@ public class EventoController {
     }
 
     @PostMapping
+    @PreAuthorize("hasAnyRole('ADMIN','OPERARIO')")
     public ResponseEntity<EventoResponse> crear(@Valid @RequestBody EventoRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(eventoService.crear(request));
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN','OPERARIO')")
     public ResponseEntity<EventoResponse> actualizar(
             @PathVariable Long id, @Valid @RequestBody EventoRequest request) {
         return ResponseEntity.ok(eventoService.actualizar(id, request));
     }
 
     @PostMapping("/{id}/material")
+    @PreAuthorize("hasAnyRole('ADMIN','OPERARIO')")
     public ResponseEntity<EventoResponse> agregarMaterial(
             @PathVariable Long id,
             @RequestBody List<EventoRequest.LineaMaterialRequest> lineas) {
@@ -64,6 +68,7 @@ public class EventoController {
     }
 
     @DeleteMapping("/{id}/material/{materialId}")
+    @PreAuthorize("hasAnyRole('ADMIN','OPERARIO')")
     public ResponseEntity<Void> quitarMaterial(
             @PathVariable Long id, @PathVariable Long materialId) {
         eventoService.quitarMaterial(id, materialId);
@@ -71,11 +76,13 @@ public class EventoController {
     }
 
     @PostMapping("/{id}/confirmar-salida")
+    @PreAuthorize("hasAnyRole('ADMIN','OPERARIO')")
     public ResponseEntity<AlbaranResponse> confirmarSalida(@PathVariable Long id) {
         return ResponseEntity.ok(eventoService.confirmarSalida(id));
     }
 
     @PostMapping("/{id}/devolucion")
+    @PreAuthorize("hasAnyRole('ADMIN','OPERARIO')")
     public ResponseEntity<AlbaranResponse> registrarDevolucion(
             @PathVariable Long id, @Valid @RequestBody DevolucionRequest request) {
         return ResponseEntity.ok(eventoService.registrarDevolucion(id, request));

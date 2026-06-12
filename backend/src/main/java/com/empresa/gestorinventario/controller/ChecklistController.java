@@ -6,6 +6,7 @@ import com.empresa.gestorinventario.service.ChecklistService;
 import com.empresa.gestorinventario.service.EventoService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,6 +21,7 @@ public class ChecklistController {
     private final EventoService eventoService;
 
     @PostMapping("/{id}/iniciar-carga")
+    @PreAuthorize("hasAnyRole('ADMIN','OPERARIO')")
     public ResponseEntity<List<ChecklistItemResponse>> iniciarCarga(@PathVariable Long id) {
         return ResponseEntity.ok(checklistService.iniciarCarga(id));
     }
@@ -30,6 +32,7 @@ public class ChecklistController {
     }
 
     @PutMapping("/{id}/checklist/{itemId}")
+    @PreAuthorize("hasAnyRole('ADMIN','OPERARIO')")
     public ResponseEntity<ChecklistItemResponse> marcarItem(
             @PathVariable Long id,
             @PathVariable Long itemId,
@@ -38,6 +41,7 @@ public class ChecklistController {
     }
 
     @PostMapping("/{id}/iniciar-devolucion")
+    @PreAuthorize("hasAnyRole('ADMIN','OPERARIO')")
     public ResponseEntity<Void> iniciarDevolucion(@PathVariable Long id) {
         eventoService.iniciarDevolucion(id);
         return ResponseEntity.ok().build();

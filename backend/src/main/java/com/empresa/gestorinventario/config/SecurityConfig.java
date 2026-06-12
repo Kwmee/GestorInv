@@ -42,6 +42,19 @@ public class SecurityConfig {
             .csrf(AbstractHttpConfigurer::disable)
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+            .headers(headers -> headers
+                .frameOptions(fo -> fo.deny())
+                .contentTypeOptions(cto -> {})
+                .httpStrictTransportSecurity(hsts -> hsts
+                    .maxAgeInSeconds(31536000)
+                    .includeSubDomains(true))
+                .addHeaderWriter((req, res) -> {
+                    res.setHeader("X-Content-Type-Options", "nosniff");
+                    res.setHeader("X-XSS-Protection", "1; mode=block");
+                    res.setHeader("Referrer-Policy", "strict-origin-when-cross-origin");
+                    res.setHeader("Permissions-Policy", "camera=(), microphone=(), geolocation=()");
+                })
+            )
             .exceptionHandling(ex -> ex
                 .authenticationEntryPoint((req, res, e) ->
                     res.sendError(HttpServletResponse.SC_UNAUTHORIZED, "No autenticado"))
@@ -83,7 +96,9 @@ public class SecurityConfig {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowedOriginPatterns(List.of("http://localhost:5173", "http://localhost:3000"));
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        config.setAllowedHeaders(List.of("*"));
+        config.setAllowedHeaders(List.of("Content-Type", "Authorization", "X-Requested-With"));
+        config.setExposedHeaders(List.of("Authorization"));
+        config.setMaxAge(3600L);
         config.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
