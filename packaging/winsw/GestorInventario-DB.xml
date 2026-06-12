@@ -2,15 +2,15 @@
   <id>GestorInventario-DB</id>
   <name>GestorInventario - Base de datos</name>
   <description>MariaDB para GestorInventario</description>
-  <executable>%BASE%\db\bin\mysqld.exe</executable>
-  <arguments>--defaults-file="%BASE%\db\my.ini" --console</arguments>
-  <workingdirectory>%BASE%\db</workingdirectory>
-  <logpath>%BASE%\logs</logpath>
+  <executable>%BASE%\..\db\bin\mysqld.exe</executable>
+  <arguments>--defaults-file="%BASE%\..\db\my.ini" --datadir="%BASE%\..\db\data" --log-error="%BASE%\..\logs\mariadb-error.log" --console</arguments>
+  <workingdirectory>%BASE%\..\db</workingdirectory>
+  <logpath>%BASE%\..\logs</logpath>
   <log mode="roll-by-size">
     <sizeThreshold>10240</sizeThreshold>
     <keepFiles>3</keepFiles>
   </log>
   <onfailure action="restart" delay="5 sec"/>
-  <stopexecutable>%BASE%\db\bin\mysqladmin.exe</stopexecutable>
+  <stopexecutable>%BASE%\..\db\bin\mysqladmin.exe</stopexecutable>
   <stoparguments>-u root shutdown</stoparguments>
 </service>

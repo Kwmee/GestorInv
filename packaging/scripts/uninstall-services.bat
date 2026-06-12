@@ -2,14 +2,13 @@
 :: Desinstala los servicios Windows de GestorInventario
 :: Debe ejecutarse como Administrador
 
-set BASE=%~dp0..
+for %%I in ("%~dp0..") do set BASE=%%~fI
 set WINSW=%BASE%\winsw
 
 echo [GestorInventario] Deteniendo servicios...
 net stop GestorInventario-Web  2>nul
 net stop GestorInventario-App  2>nul
 net stop GestorInventario-DB   2>nul
-
 timeout /t 3 /nobreak > nul
 
 echo [GestorInventario] Desinstalando servicios...
@@ -19,4 +18,3 @@ echo [GestorInventario] Desinstalando servicios...
 
 echo [GestorInventario] Servicios desinstalados.
 echo Los datos (base de datos y albaranes) se conservan en la carpeta de instalacion.
-pause

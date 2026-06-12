@@ -1,8 +1,14 @@
 import axiosClient from './axiosClient'
 import type {
-  Albaran, DevolucionRequest, Evento, EventoRequest,
+  Albaran, ChecklistItem, DevolucionRequest, Evento, EventoRequest,
   LineaMaterialRequest, PaginaResponse,
 } from '@/types'
+
+export interface ChecklistItemRequest {
+  estado: 'PENDIENTE' | 'CARGADO' | 'PARCIAL' | 'FALTANTE'
+  cantidadCargada?: number
+  notas?: string
+}
 
 interface FiltrosEvento {
   estado?: string
@@ -39,4 +45,16 @@ export const eventoApi = {
 
   listaCarga: (id: number) =>
     axiosClient.get(`/eventos/${id}/lista-carga`, { responseType: 'blob' }).then((r) => r.data as Blob),
+
+  iniciarCarga: (id: number) =>
+    axiosClient.post<ChecklistItem[]>(`/eventos/${id}/iniciar-carga`).then((r) => r.data),
+
+  obtenerChecklist: (id: number) =>
+    axiosClient.get<ChecklistItem[]>(`/eventos/${id}/checklist`).then((r) => r.data),
+
+  marcarItem: (eventoId: number, itemId: number, data: ChecklistItemRequest) =>
+    axiosClient.put<ChecklistItem>(`/eventos/${eventoId}/checklist/${itemId}`, data).then((r) => r.data),
+
+  iniciarDevolucion: (id: number) =>
+    axiosClient.post(`/eventos/${id}/iniciar-devolucion`),
 }

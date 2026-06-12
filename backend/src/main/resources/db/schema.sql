@@ -80,7 +80,7 @@ CREATE TABLE IF NOT EXISTS eventos (
     lugar                VARCHAR(300),
     fecha_inicio         DATETIME     NOT NULL,
     fecha_fin            DATETIME,
-    estado               ENUM('PLANIFICADO','ACTIVO','FINALIZADO','CANCELADO') NOT NULL DEFAULT 'PLANIFICADO',
+    estado               ENUM('PLANIFICADO','EN_CARGA','ACTIVO','DEVOLVIENDO','FINALIZADO','CANCELADO') NOT NULL DEFAULT 'PLANIFICADO',
     observaciones        TEXT,
     created_at           DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at           DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -100,6 +100,20 @@ CREATE TABLE IF NOT EXISTS lineas_evento (
     CONSTRAINT fk_linea_evento   FOREIGN KEY (evento_id)   REFERENCES eventos(id),
     CONSTRAINT fk_linea_material FOREIGN KEY (material_id) REFERENCES material(id),
     UNIQUE KEY uk_linea_evento_material (evento_id, material_id)
+) ENGINE=InnoDB;
+
+CREATE TABLE IF NOT EXISTS checklist_carga (
+    id                   BIGINT AUTO_INCREMENT PRIMARY KEY,
+    evento_id            BIGINT NOT NULL,
+    material_id          BIGINT NOT NULL,
+    cantidad_planificada INT    NOT NULL,
+    cantidad_cargada     INT,
+    estado               ENUM('PENDIENTE','CARGADO','PARCIAL','FALTANTE') NOT NULL DEFAULT 'PENDIENTE',
+    notas                TEXT,
+    confirmado_en        DATETIME,
+    CONSTRAINT fk_checklist_evento   FOREIGN KEY (evento_id)   REFERENCES eventos(id),
+    CONSTRAINT fk_checklist_material FOREIGN KEY (material_id) REFERENCES material(id),
+    UNIQUE KEY uk_checklist_evento_material (evento_id, material_id)
 ) ENGINE=InnoDB;
 
 CREATE TABLE IF NOT EXISTS albaranes (

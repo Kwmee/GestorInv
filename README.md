@@ -4,84 +4,95 @@ Sistema de gestión de inventario y albaranes para empresa de sonido.
 
 ---
 
-## Instalación para el cliente (Windows)
+## Estructura del proyecto
 
-### Primera instalación
+```
+GestorInventario/
+├── backend/        → API REST (Spring Boot / Java 17)
+├── frontend/       → Interfaz web (React + TypeScript)
+├── docs/           → Documentación Métrica 3
+├── packaging/      → Instalador del cliente (Inno Setup)
+├── dev.bat         → Arranca el entorno de desarrollo
+├── build.ps1       → Genera el instalador .exe para el cliente
+├── docker-compose.yml → Base de datos para desarrollo
+└── logo.png        → Logo de empresa para los albaranes PDF
+```
 
-1. Descarga este proyecto como ZIP desde GitHub:
-   - Botón verde **Code** → **Download ZIP**
-   - Descomprime en `C:\GestorInventario`
+---
 
-2. Doble clic en **`instalar.bat`**
+## Para el cliente (instalar en Windows)
 
-El script instala Docker automáticamente si no está presente, te pregunta el nombre de tu empresa, teléfono, email y contraseña, y levanta el sistema.
-Al terminar abre automáticamente el navegador.
+El cliente recibe un único archivo:
+
+```
+GestorInventario-Setup-X.X.X.exe
+```
+
+Doble clic → siguiente, siguiente → instala y arranca solo.
+Se crea un acceso directo en el escritorio.
 
 ```
 Usuario inicial: admin@empresa.com
 Contraseña:      Admin1234!
 ```
 
-> Cambia la contraseña desde el sistema después del primer acceso.
+> Cambia la contraseña desde Configuración después del primer acceso.
 
 ---
 
-## Uso diario
+## Para el desarrollador
 
-| Acción | Script |
-|---|---|
-| Encender el sistema | `iniciar.bat` |
-| Apagar el sistema | `detener.bat` |
-| Actualizar a nueva versión | `actualizar.bat` |
+### Requisitos
+
+- JDK 17+
+- Maven 3.9+
+- Node 18+
+- Docker Desktop
+
+### Arrancar en desarrollo
+
+```bat
+dev.bat
+```
+
+Esto levanta la base de datos (Docker), el backend (Spring Boot en :8080)
+y el frontend (Vite en :5173). Al terminar, Ctrl+C para todo.
+
+Acceso: [http://localhost:5173](http://localhost:5173)
+
+---
+
+### Generar el instalador del cliente
+
+**Requisitos extra:** Inno Setup 6 — [descargar gratis](https://jrsoftware.org/isinfo.php)
+
+```powershell
+.\build.ps1
+```
+
+El instalador aparece en `packaging/output/GestorInventario-Setup-X.X.X.exe`.
 
 ---
 
 ## Logo de empresa en los albaranes
 
-Coloca tu logotipo como `logo.png` en la carpeta raíz del proyecto
-junto a los scripts `.bat`. Se incluirá automáticamente en todos los PDF.
+Reemplaza el archivo `logo.png` de la raíz con el logo real de la empresa
+(formato PNG, tamaño recomendado 400×120 px).
+Se incluirá automáticamente en todos los albaranes PDF generados.
 
 ---
 
-## ¿Qué incluye?
-
-- Inventario de material técnico (PA, iluminación, backline, cables...)
-- Control de estados: disponible / en evento / en reparación / baja
-- Gestión de clientes
-- Registro de eventos y asignación de material
-- Albaranes de salida y devolución en PDF con logo
-- Dashboard de estado en tiempo real
-
----
-
-## Stack técnico
+## Stack
 
 | Capa | Tecnología |
 |---|---|
 | Frontend | React 18 + TypeScript + Tailwind CSS |
-| Backend | Spring Boot 3.2 (Java 17) |
-| Base de datos | MySQL 8 |
+| Backend | Spring Boot 3 + Java 17 |
+| Base de datos | MySQL 8 (dev) / MariaDB 11 (cliente) |
 | Autenticación | Spring Security + JWT |
 | PDF | iText 7 |
-| Despliegue | Docker Compose |
+| Instalador | Inno Setup 6 |
 
-## Para desarrolladores
-
-```bash
-# Clonar
-git clone https://github.com/Kwmee/GestorInv.git
-cd GestorInv
-
-# Levantar todo
-cp .env.example .env
-docker compose up -d
-
-# O en local sin Docker:
-# BD: mysql -u root -p < backend/src/main/resources/db/schema.sql
-# Backend: cd backend && mvn spring-boot:run
-# Frontend: cd frontend && npm install && npm run dev
-```
-
-Swagger UI: http://localhost/api/swagger-ui/index.html
+---
 
 Documentación Métrica 3 completa en `/docs`.

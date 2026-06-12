@@ -160,6 +160,47 @@ public class PdfService {
         }
     }
 
+    public byte[] generarAlbaranSalidaBytes(Evento evento, String numero, Trabajador trabajador) {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        try (PdfWriter writer = new PdfWriter(baos);
+             PdfDocument pdf = new PdfDocument(writer);
+             Document doc = new Document(pdf, PageSize.A4)) {
+            doc.setMargins(36, 36, 36, 36);
+            PdfFont fontNormal  = PdfFontFactory.createFont(StandardFonts.HELVETICA);
+            PdfFont fontNegrita = PdfFontFactory.createFont(StandardFonts.HELVETICA_BOLD);
+            agregarCabecera(doc, fontNegrita, fontNormal, "ALBARÁN DE SALIDA", numero,
+                evento.getFechaInicio().format(FORMATO_FECHA));
+            agregarDatosEventoYCliente(doc, fontNegrita, fontNormal, evento, trabajador);
+            agregarTablaLineas(doc, fontNegrita, fontNormal, evento.getLineas(), false);
+            agregarSeccionFirmas(doc, fontNormal);
+            agregarPieDocumento(doc, fontNormal);
+        } catch (IOException e) {
+            throw new NegocioException("Error al generar el albarán de salida");
+        }
+        return baos.toByteArray();
+    }
+
+    public byte[] generarAlbaranDevolucionBytes(Evento evento, List<LineaEvento> lineas,
+                                                 String numero, Trabajador trabajador) {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        try (PdfWriter writer = new PdfWriter(baos);
+             PdfDocument pdf = new PdfDocument(writer);
+             Document doc = new Document(pdf, PageSize.A4)) {
+            doc.setMargins(36, 36, 36, 36);
+            PdfFont fontNormal  = PdfFontFactory.createFont(StandardFonts.HELVETICA);
+            PdfFont fontNegrita = PdfFontFactory.createFont(StandardFonts.HELVETICA_BOLD);
+            agregarCabecera(doc, fontNegrita, fontNormal, "ALBARÁN DE DEVOLUCIÓN", numero,
+                LocalDateTime.now().format(FORMATO_FECHA));
+            agregarDatosEventoYCliente(doc, fontNegrita, fontNormal, evento, trabajador);
+            agregarTablaLineas(doc, fontNegrita, fontNormal, lineas, true);
+            agregarSeccionFirmas(doc, fontNormal);
+            agregarPieDocumento(doc, fontNormal);
+        } catch (IOException e) {
+            throw new NegocioException("Error al generar el albarán de devolución");
+        }
+        return baos.toByteArray();
+    }
+
     private void agregarCabecera(Document doc, PdfFont fontNegrita, PdfFont fontNormal,
                                   String tipoAlbaran, String numero, String fecha) throws IOException {
         Table tablaCabecera = new Table(UnitValue.createPercentArray(new float[]{50, 50}))

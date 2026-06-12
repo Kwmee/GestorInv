@@ -9,10 +9,12 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: ""
       MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+      MYSQL_ROOT_HOST: "%"
       MYSQL_DATABASE: gestor_inventario
     volumes:
       - mysql_data:/var/lib/mysql
-      - ./backend/src/main/resources/db/schema.sql:/docker-entrypoint-initdb.d/schema.sql
+      - ./backend/src/main/resources/db/schema.sql:/docker-entrypoint-initdb.d/01_schema.sql
+      - ./backend/src/main/resources/db/seed.sql:/docker-entrypoint-initdb.d/02_seed.sql
     ports:
       - "3306:3306"
     healthcheck:

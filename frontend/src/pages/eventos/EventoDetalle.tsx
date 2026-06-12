@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import toast from 'react-hot-toast'
-import { ArrowLeft, FileDown, Truck, RotateCcw, Plus, Trash2, ClipboardList, ChevronDown, Search } from 'lucide-react'
+import { ArrowLeft, FileDown, Truck, RotateCcw, Plus, Trash2, ClipboardList, ChevronDown, Search, PackageCheck, PackageOpen } from 'lucide-react'
 import { descargarBlob } from '@/lib/descargar'
 import { eventoApi } from '@/api/evento.api'
 import { materialApi } from '@/api/material.api'
@@ -12,6 +12,7 @@ import { EstadoBadge } from '@/components/ui/EstadoBadge'
 import { ConfirmDialog } from '@/components/ui/ConfirmDialog'
 import { Modal } from '@/components/ui/Modal'
 import { DevolucionForm } from './DevolucionForm'
+import { ChecklistCarga } from './ChecklistCarga'
 import { format } from 'date-fns'
 import { es } from 'date-fns/locale'
 
@@ -22,6 +23,8 @@ export function EventoDetalle() {
   const queryClient = useQueryClient()
 
   const [confirmarSalida, setConfirmarSalida] = useState(false)
+  const [confirmarIniciarCarga, setConfirmarIniciarCarga] = useState(false)
+  const [confirmarIniciarDevolucion, setConfirmarIniciarDevolucion] = useState(false)
   const [modalDevolucion, setModalDevolucion] = useState(false)
   const [panelAnadir, setPanelAnadir] = useState(false)
   const [busqueda, setBusqueda] = useState('')
@@ -47,6 +50,27 @@ export function EventoDetalle() {
       setConfirmarSalida(false)
     },
     onError: (err: any) => toast.error(err.response?.data?.mensaje ?? 'Error al confirmar salida'),
+  })
+
+  const { mutate: iniciarCargaMutate, isPending: iniciandoCarga } = useMutation({
+    mutationFn: () => eventoApi.iniciarCarga(eventoId),
+    onSuccess: () => {
+      toast.success('Checklist de carga iniciado')
+      queryClient.invalidateQueries({ queryKey: ['evento', eventoId] })
+      queryClient.invalidateQueries({ queryKey: ['checklist', eventoId] })
+      setConfirmarIniciarCarga(false)
+    },
+    onError: (err: any) => toast.error(err.response?.data?.mensaje ?? 'Error al iniciar carga'),
+  })
+
+  const { mutate: iniciarDevolucionMutate, isPending: iniciandoDevolucion } = useMutation({
+    mutationFn: () => eventoApi.iniciarDevolucion(eventoId),
+    onSuccess: () => {
+      toast.success('El material está en camino de vuelta')
+      queryClient.invalidateQueries({ queryKey: ['evento', eventoId] })
+      setConfirmarIniciarDevolucion(false)
+    },
+    onError: (err: any) => toast.error(err.response?.data?.mensaje ?? 'Error al iniciar devolución'),
   })
 
   const { mutate: agregarMaterial } = useMutation({
@@ -94,8 +118,10 @@ export function EventoDetalle() {
     )
   }
 
-  const esPlanificado = evento.estado === 'PLANIFICADO'
-  const esActivo = evento.estado === 'ACTIVO'
+  const esPlanificado  = evento.estado === 'PLANIFICADO'
+  const esEnCarga      = evento.estado === 'EN_CARGA'
+  const esActivo       = evento.estado === 'ACTIVO'
+  const esDevolviendo  = evento.estado === 'DEVOLVIENDO'
   const formatFecha = (iso: string) => format(new Date(iso), "d MMM yyyy HH:mm", { locale: es })
 
   return (
@@ -116,22 +142,52 @@ export function EventoDetalle() {
           </div>
         </div>
 
-        <div className="flex gap-2">
+        <div className="flex gap-2 flex-wrap justify-end">
           {evento.lineas.length > 0 && (
             <Button variante="secundario" onClick={descargarListaCarga}>
               <ClipboardList className="h-4 w-4" />
               Lista de carga
             </Button>
           )}
+
+          {/* PLANIFICADO: iniciar carga o salida directa */}
           {esPlanificado && (
             <>
+              <Button variante="secundario" onClick={() => setConfirmarIniciarCarga(true)}>
+                <PackageOpen className="h-4 w-4" />
+                Iniciar carga
+              </Button>
               <Button onClick={() => setConfirmarSalida(true)}>
                 <Truck className="h-4 w-4" />
                 Confirmar salida
               </Button>
             </>
           )}
+
+          {/* EN_CARGA: salida (checklist abajo) */}
+          {esEnCarga && (
+            <Button onClick={() => setConfirmarSalida(true)}>
+              <Truck className="h-4 w-4" />
+              Confirmar salida
+            </Button>
+          )}
+
+          {/* ACTIVO: iniciar devolución */}
           {esActivo && (
+            <>
+              <Button variante="secundario" onClick={() => setConfirmarIniciarDevolucion(true)}>
+                <PackageCheck className="h-4 w-4" />
+                Material en ruta de vuelta
+              </Button>
+              <Button onClick={() => setModalDevolucion(true)}>
+                <RotateCcw className="h-4 w-4" />
+                Registrar devolución
+              </Button>
+            </>
+          )}
+
+          {/* DEVOLVIENDO: solo registrar devolución */}
+          {esDevolviendo && (
             <Button onClick={() => setModalDevolucion(true)}>
               <RotateCcw className="h-4 w-4" />
               Registrar devolución
@@ -154,6 +210,19 @@ export function EventoDetalle() {
           </div>
         ))}
       </div>
+
+      {/* Checklist de carga (solo EN_CARGA) */}
+      {esEnCarga && (
+        <div className="bg-white dark:bg-zinc-900 rounded-xl border border-orange-200 dark:border-orange-800/40 shadow-sm overflow-hidden">
+          <div className="px-5 py-4 border-b border-orange-100 dark:border-orange-800/30 bg-orange-50 dark:bg-orange-900/10 flex items-center gap-2">
+            <PackageOpen className="h-4 w-4 text-orange-600 dark:text-orange-400" />
+            <h3 className="font-semibold text-orange-900 dark:text-orange-300">Checklist de carga del camión</h3>
+          </div>
+          <div className="p-5">
+            <ChecklistCarga eventoId={eventoId} />
+          </div>
+        </div>
+      )}
 
       {/* Material asignado */}
       <div className="bg-white dark:bg-zinc-900 rounded-xl border border-gray-100 dark:border-zinc-800 shadow-sm overflow-hidden">
@@ -229,7 +298,6 @@ export function EventoDetalle() {
 
             {panelAnadir && (
               <div className="border-t border-gray-100 dark:border-zinc-800 p-4 space-y-3">
-                {/* Filtros */}
                 <div className="flex gap-2">
                   <div className="relative flex-1">
                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
@@ -252,7 +320,6 @@ export function EventoDetalle() {
                   </select>
                 </div>
 
-                {/* Lista */}
                 <div className="max-h-72 overflow-y-auto rounded-lg border border-gray-100 dark:border-zinc-800 divide-y divide-gray-50 dark:divide-zinc-800">
                   {disponibleFiltrado.length === 0 ? (
                     <p className="text-sm text-gray-400 dark:text-zinc-500 text-center py-6">
@@ -323,15 +390,37 @@ export function EventoDetalle() {
         </div>
       )}
 
-      {/* Confirmar salida */}
+      {/* Diálogo: Iniciar carga */}
+      <ConfirmDialog
+        abierto={confirmarIniciarCarga}
+        titulo="Iniciar carga del camión"
+        mensaje="Se generará el checklist con el material planificado para este evento. Los operarios podrán marcar cada ítem a medida que lo cargan. ¿Continuar?"
+        textoConfirmar="Iniciar carga"
+        cargando={iniciandoCarga}
+        onConfirmar={() => iniciarCargaMutate()}
+        onCancelar={() => setConfirmarIniciarCarga(false)}
+      />
+
+      {/* Diálogo: Confirmar salida */}
       <ConfirmDialog
         abierto={confirmarSalida}
         titulo="Confirmar salida de material"
-        mensaje={`Se generará el albarán de salida y el material pasará a estado EN EVENTO. ¿Confirmar?`}
+        mensaje="Se generará el albarán de salida y el material pasará a estado EN EVENTO. ¿Confirmar?"
         textoConfirmar="Confirmar salida"
         cargando={confirmando}
         onConfirmar={() => confirmarSalidaMutate()}
         onCancelar={() => setConfirmarSalida(false)}
+      />
+
+      {/* Diálogo: Iniciar devolución */}
+      <ConfirmDialog
+        abierto={confirmarIniciarDevolucion}
+        titulo="Material en ruta de vuelta"
+        mensaje="El evento pasará a estado DEVOLVIENDO. Úsalo cuando el camión ya está de regreso hacia la nave. ¿Confirmar?"
+        textoConfirmar="Confirmar"
+        cargando={iniciandoDevolucion}
+        onConfirmar={() => iniciarDevolucionMutate()}
+        onCancelar={() => setConfirmarIniciarDevolucion(false)}
       />
 
       {/* Modal devolución */}
@@ -350,7 +439,6 @@ export function EventoDetalle() {
           }}
         />
       </Modal>
-
     </div>
   )
 }

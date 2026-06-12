@@ -3,7 +3,8 @@
 // ============================================================
 
 export type EstadoMaterial = 'DISPONIBLE' | 'EN_EVENTO' | 'EN_REPARACION' | 'BAJA'
-export type EstadoEvento   = 'PLANIFICADO' | 'ACTIVO' | 'FINALIZADO' | 'CANCELADO'
+export type EstadoEvento        = 'PLANIFICADO' | 'EN_CARGA' | 'ACTIVO' | 'DEVOLVIENDO' | 'FINALIZADO' | 'CANCELADO'
+export type EstadoChecklistItem = 'PENDIENTE' | 'CARGADO' | 'PARCIAL' | 'FALTANTE'
 export type TipoAlbaran    = 'SALIDA' | 'DEVOLUCION'
 export type RolUsuario     = 'ADMIN' | 'OPERARIO'
 export type EstadoDevolucion = 'PENDIENTE' | 'OK' | 'CON_INCIDENCIA' | 'NO_DEVUELTO'
@@ -54,6 +55,19 @@ export interface Cliente {
   tipo: TipoCliente
   activo: boolean
   creadoEn: string
+}
+
+export interface ChecklistItem {
+  id: number
+  materialId: number
+  materialNombre: string
+  materialNumeroSerie?: string
+  materialCategoria?: string
+  cantidadPlanificada: number
+  cantidadCargada?: number
+  estado: EstadoChecklistItem
+  notas?: string
+  confirmadoEn?: string
 }
 
 export interface LineaEventoInfo {

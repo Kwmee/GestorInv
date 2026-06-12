@@ -35,5 +35,10 @@ albaranes-pdf/
 .env.production
 backend/src/main/resources/application-prod.properties
 
-# ===== Docker =====
-docker-data/
+# ===== Logs de desarrollo =====
+logs/
+
+# ===== Packaging / Instalador =====
+packaging/cache/
+packaging/stage/
+packaging/output/

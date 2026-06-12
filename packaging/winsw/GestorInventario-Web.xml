@@ -2,16 +2,16 @@
   <id>GestorInventario-Web</id>
   <name>GestorInventario - Web</name>
   <description>nginx para GestorInventario (sirve el frontend)</description>
-  <executable>%BASE%\nginx\nginx.exe</executable>
-  <arguments>-c "%BASE%\nginx\nginx.conf" -p "%BASE%\nginx"</arguments>
-  <workingdirectory>%BASE%\nginx</workingdirectory>
-  <logpath>%BASE%\logs</logpath>
+  <executable>%BASE%\..\nginx\nginx.exe</executable>
+  <arguments>-c "%BASE%\..\nginx\conf\nginx.conf" -p "%BASE%\..\nginx"</arguments>
+  <workingdirectory>%BASE%\..\nginx</workingdirectory>
+  <logpath>%BASE%\..\logs</logpath>
   <log mode="roll-by-size">
     <sizeThreshold>5120</sizeThreshold>
     <keepFiles>3</keepFiles>
   </log>
   <depend>GestorInventario-App</depend>
   <onfailure action="restart" delay="5 sec"/>
-  <stopexecutable>%BASE%\nginx\nginx.exe</stopexecutable>
-  <stoparguments>-c "%BASE%\nginx\nginx.conf" -p "%BASE%\nginx" -s stop</stoparguments>
+  <stopexecutable>%BASE%\..\nginx\nginx.exe</stopexecutable>
+  <stoparguments>-c "%BASE%\..\nginx\conf\nginx.conf" -p "%BASE%\..\nginx" -s stop</stoparguments>
 </service>

@@ -111,8 +111,8 @@ public class EventoService {
     public EventoResponse agregarMaterial(Long eventoId, List<EventoRequest.LineaMaterialRequest> lineasRequest) {
         Evento evento = obtenerEntidad(eventoId);
 
-        if (evento.getEstado() == EstadoEvento.FINALIZADO || evento.getEstado() == EstadoEvento.CANCELADO) {
-            throw new NegocioException("No se puede añadir material a un evento en estado " + evento.getEstado());
+        if (evento.getEstado() != EstadoEvento.PLANIFICADO) {
+            throw new NegocioException("Solo se puede añadir material en estado PLANIFICADO");
         }
 
         agregarLineas(evento, lineasRequest);
@@ -147,7 +147,7 @@ public class EventoService {
         if (evento.getEstado() == EstadoEvento.ACTIVO) {
             throw new NegocioException("El albarán de salida ya fue generado para este evento");
         }
-        if (evento.getEstado() != EstadoEvento.PLANIFICADO) {
+        if (evento.getEstado() != EstadoEvento.PLANIFICADO && evento.getEstado() != EstadoEvento.EN_CARGA) {
             throw new NegocioException("No se puede confirmar la salida de un evento en estado " + evento.getEstado());
         }
 
@@ -165,11 +165,21 @@ public class EventoService {
     }
 
     @Transactional
+    public void iniciarDevolucion(Long eventoId) {
+        Evento evento = obtenerEntidad(eventoId);
+        if (evento.getEstado() != EstadoEvento.ACTIVO) {
+            throw new NegocioException("Solo se puede iniciar la devolución en eventos ACTIVOS");
+        }
+        evento.setEstado(EstadoEvento.DEVOLVIENDO);
+        eventoRepository.save(evento);
+    }
+
+    @Transactional
     public AlbaranResponse registrarDevolucion(Long eventoId, DevolucionRequest request) {
         Evento evento = obtenerEntidad(eventoId);
 
-        if (evento.getEstado() != EstadoEvento.ACTIVO) {
-            throw new NegocioException("Solo se puede registrar devolución en eventos ACTIVOS");
+        if (evento.getEstado() != EstadoEvento.ACTIVO && evento.getEstado() != EstadoEvento.DEVOLVIENDO) {
+            throw new NegocioException("Solo se puede registrar devolución en eventos ACTIVOS o DEVOLVIENDO");
         }
 
         Usuario usuarioActual = obtenerUsuarioActual();

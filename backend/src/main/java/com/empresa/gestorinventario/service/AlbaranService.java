@@ -16,6 +16,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.Year;
 import java.util.List;
@@ -48,7 +50,19 @@ public class AlbaranService {
 
     public byte[] obtenerPdf(Long id) {
         Albaran albaran = obtenerEntidad(id);
-        return pdfService.leerPdf(albaran.getRutaPdf());
+
+        if (albaran.getRutaPdf() != null && Files.exists(Paths.get(albaran.getRutaPdf()))) {
+            return pdfService.leerPdf(albaran.getRutaPdf());
+        }
+
+        if (albaran.getTipo() == TipoAlbaran.SALIDA) {
+            return pdfService.generarAlbaranSalidaBytes(
+                albaran.getEvento(), albaran.getNumero(), albaran.getTrabajador());
+        } else {
+            return pdfService.generarAlbaranDevolucionBytes(
+                albaran.getEvento(), albaran.getEvento().getLineas(),
+                albaran.getNumero(), albaran.getTrabajador());
+        }
     }
 
     @Transactional
