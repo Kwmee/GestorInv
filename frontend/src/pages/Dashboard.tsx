@@ -15,11 +15,12 @@ function StatCard({
   return (
     <button
       onClick={onClick}
-      className="group bg-white dark:bg-zinc-900 rounded-xl border border-gray-200 dark:border-zinc-800 p-5 text-left hover:border-gray-300 dark:hover:border-zinc-700 transition-all w-full"
+      className="group rounded-xl border p-5 text-left w-full transition-all hover:shadow-card"
+      style={{ background: 'var(--card)', borderColor: 'var(--card-border)' }}
     >
-      <p className="text-xs font-medium text-gray-400 dark:text-zinc-500 uppercase tracking-wide">{label}</p>
-      <p className={`text-3xl font-bold mt-2 ${color}`}>{valor}</p>
-      {sub && <p className="text-xs text-gray-400 dark:text-zinc-600 mt-1">{sub}</p>}
+      <p className="text-2xs font-semibold text-zinc-400 dark:text-zinc-500 uppercase tracking-widest">{label}</p>
+      <p className={`text-3xl font-bold mt-2 tabular ${color}`}>{valor}</p>
+      {sub && <p className="text-xs text-zinc-400 dark:text-zinc-600 mt-1">{sub}</p>}
     </button>
   )
 }
@@ -38,11 +39,19 @@ export function Dashboard() {
 
   if (isLoading) {
     return (
-      <div className="space-y-6">
-        <div className="h-8 w-64 bg-gray-200 dark:bg-zinc-800 rounded animate-pulse" />
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="space-y-7">
+        <div className="space-y-1.5">
+          <div className="skeleton h-7 w-56" />
+          <div className="skeleton h-4 w-36" />
+        </div>
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
           {[...Array(4)].map((_, i) => (
-            <div key={i} className="h-28 bg-white dark:bg-zinc-900 rounded-xl border border-gray-200 dark:border-zinc-800 animate-pulse" />
+            <div key={i} className="skeleton h-28 rounded-xl" />
+          ))}
+        </div>
+        <div className="grid grid-cols-3 gap-3">
+          {[...Array(3)].map((_, i) => (
+            <div key={i} className="skeleton h-24 rounded-xl" />
           ))}
         </div>
       </div>
@@ -113,69 +122,60 @@ export function Dashboard() {
 
       {/* Fila resumen */}
       <div className="grid grid-cols-3 gap-3">
-        <div className="bg-white dark:bg-zinc-900 rounded-xl border border-gray-200 dark:border-zinc-800 p-5">
-          <div className="flex items-center gap-2 mb-3">
-            <Package className="h-4 w-4 text-gray-400 dark:text-zinc-500" />
-            <p className="text-xs font-medium text-gray-400 dark:text-zinc-500 uppercase tracking-wide">Total inventario</p>
+        {[
+          { icon: Package, iconColor: 'text-zinc-400', label: 'Total inventario', valor: data.totalMaterial, valColor: 'text-zinc-900 dark:text-zinc-100', sub: 'equipos registrados' },
+          { icon: CalendarDays, iconColor: 'text-blue-500', label: 'Eventos activos', valor: data.eventosActivos, valColor: 'text-blue-600 dark:text-blue-400', sub: 'en este momento' },
+          { icon: Truck, iconColor: 'text-amber-500', label: 'Pendiente devolución', valor: data.materialPendienteDevolucion, valColor: 'text-amber-600 dark:text-amber-400', sub: 'ítems sin devolver' },
+        ].map(({ icon: Icon, iconColor, label, valor, valColor, sub }) => (
+          <div key={label} className="rounded-xl border p-5"
+            style={{ background: 'var(--card)', borderColor: 'var(--card-border)' }}>
+            <div className="flex items-center gap-2 mb-3">
+              <Icon className={`h-4 w-4 ${iconColor}`} />
+              <p className="text-2xs font-semibold text-zinc-400 dark:text-zinc-500 uppercase tracking-widest">{label}</p>
+            </div>
+            <p className={`text-3xl font-bold tabular ${valColor}`}>{valor}</p>
+            <p className="text-xs text-zinc-400 dark:text-zinc-600 mt-1">{sub}</p>
           </div>
-          <p className="text-3xl font-bold text-gray-900 dark:text-zinc-100">{data.totalMaterial}</p>
-          <p className="text-xs text-gray-400 dark:text-zinc-600 mt-1">equipos registrados</p>
-        </div>
-
-        <div className="bg-white dark:bg-zinc-900 rounded-xl border border-gray-200 dark:border-zinc-800 p-5">
-          <div className="flex items-center gap-2 mb-3">
-            <CalendarDays className="h-4 w-4 text-blue-500" />
-            <p className="text-xs font-medium text-gray-400 dark:text-zinc-500 uppercase tracking-wide">Eventos activos</p>
-          </div>
-          <p className="text-3xl font-bold text-blue-600 dark:text-blue-400">{data.eventosActivos}</p>
-          <p className="text-xs text-gray-400 dark:text-zinc-600 mt-1">en este momento</p>
-        </div>
-
-        <div className="bg-white dark:bg-zinc-900 rounded-xl border border-gray-200 dark:border-zinc-800 p-5">
-          <div className="flex items-center gap-2 mb-3">
-            <Truck className="h-4 w-4 text-amber-500" />
-            <p className="text-xs font-medium text-gray-400 dark:text-zinc-500 uppercase tracking-wide">Pendiente devolución</p>
-          </div>
-          <p className="text-3xl font-bold text-amber-600 dark:text-amber-400">{data.materialPendienteDevolucion}</p>
-          <p className="text-xs text-gray-400 dark:text-zinc-600 mt-1">ítems sin devolver</p>
-        </div>
+        ))}
       </div>
 
       {/* Eventos activos */}
       {data.eventosActivosDetalle.length > 0 && (
-        <div className="bg-white dark:bg-zinc-900 rounded-xl border border-gray-200 dark:border-zinc-800 overflow-hidden">
-          <div className="px-5 py-3.5 border-b border-gray-100 dark:border-zinc-800 flex items-center justify-between">
+        <div className="rounded-xl border overflow-hidden"
+          style={{ background: 'var(--card)', borderColor: 'var(--card-border)' }}>
+          <div className="px-5 py-3.5 border-b flex items-center justify-between"
+            style={{ borderColor: 'var(--card-border)' }}>
             <div className="flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" />
-              <h3 className="text-sm font-semibold text-gray-900 dark:text-zinc-100">Eventos en curso</h3>
+              <span className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse" />
+              <h3 className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">Eventos en curso</h3>
             </div>
             <button
               onClick={() => navigate('/eventos')}
-              className="text-xs text-gray-400 hover:text-gray-600 dark:text-zinc-500 dark:hover:text-zinc-300 flex items-center gap-1 transition-colors"
+              className="text-xs text-zinc-400 hover:text-zinc-600 dark:text-zinc-500 dark:hover:text-zinc-300 flex items-center gap-1 transition-colors"
             >
               Ver todos <ArrowRight className="h-3 w-3" />
             </button>
           </div>
-          <div className="divide-y divide-gray-50 dark:divide-zinc-800">
+          <div className="divide-y" style={{ borderColor: 'var(--card-border)' }}>
             {data.eventosActivosDetalle.map((e) => (
               <button
                 key={e.id}
                 onClick={() => navigate(`/eventos/${e.id}`)}
-                className="w-full flex items-center justify-between px-5 py-3 hover:bg-gray-50 dark:hover:bg-zinc-800/60 text-left transition-colors group"
+                className="w-full flex items-center justify-between px-5 py-3 hover:bg-zinc-50 dark:hover:bg-zinc-800/50 text-left transition-colors group"
               >
                 <div className="min-w-0">
-                  <p className="text-sm font-medium text-gray-900 dark:text-zinc-100 truncate">{e.nombre}</p>
-                  <p className="text-xs text-gray-400 dark:text-zinc-500 mt-0.5">
+                  <p className="text-sm font-medium text-zinc-900 dark:text-zinc-100 truncate">{e.nombre}</p>
+                  <p className="text-xs text-zinc-400 dark:text-zinc-500 mt-0.5">
                     {e.cliente} · {e.fechaInicio}
                   </p>
                 </div>
                 <div className="flex items-center gap-3 shrink-0 ml-4">
                   {e.materialPendiente > 0 && (
-                    <span className="text-xs bg-amber-50 text-amber-700 border border-amber-200 dark:bg-amber-900/20 dark:text-amber-400 dark:border-amber-800 px-2 py-0.5 rounded font-medium">
+                    <span className="text-xs bg-amber-50 text-amber-700 border border-amber-200 dark:bg-amber-900/20 dark:text-amber-400 dark:border-amber-800 px-2 py-0.5 rounded font-medium tabular">
                       {e.materialPendiente} pendientes
                     </span>
                   )}
-                  <ArrowRight className="h-3.5 w-3.5 text-gray-300 dark:text-zinc-600 group-hover:text-gray-500 dark:group-hover:text-zinc-400 transition-colors" />
+                  <ArrowRight className="h-3.5 w-3.5 text-zinc-300 dark:text-zinc-600 group-hover:text-zinc-500 dark:group-hover:text-zinc-400 transition-colors" />
                 </div>
               </button>
             ))}

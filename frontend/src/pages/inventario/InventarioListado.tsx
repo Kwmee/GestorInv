@@ -73,8 +73,8 @@ export function InventarioListado() {
     <div className="space-y-5">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-zinc-100">Inventario</h2>
-          <p className="text-sm text-gray-500 dark:text-zinc-400 mt-0.5">
+          <h2 className="text-xl font-semibold text-zinc-900 dark:text-zinc-100">Inventario</h2>
+          <p className="text-sm text-zinc-400 dark:text-zinc-500 mt-0.5">
             {data ? `${data.totalElementos} ítems` : ''}
           </p>
         </div>
@@ -91,7 +91,7 @@ export function InventarioListado() {
       </div>
 
       {/* Filtros */}
-      <div className="bg-white dark:bg-zinc-900 rounded-xl border border-gray-100 dark:border-zinc-800 shadow-sm p-4">
+      <div className="rounded-xl border p-4" style={{ background: 'var(--card)', borderColor: 'var(--card-border)' }}>
         <div className="flex flex-wrap gap-3">
           <div className="relative flex-1 min-w-48">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 dark:text-zinc-500" />
@@ -99,7 +99,7 @@ export function InventarioListado() {
               placeholder="Buscar por nombre, marca o modelo..."
               value={busqueda}
               onChange={(e) => { setBusqueda(e.target.value); setPagina(0) }}
-              className="w-full pl-9 pr-3 py-2 text-sm border border-gray-300 dark:border-zinc-700 rounded-md bg-white dark:bg-zinc-900 text-gray-900 dark:text-zinc-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full pl-9 pr-3 h-9 text-sm border border-zinc-200 dark:border-zinc-700 rounded-md bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500 transition-shadow"
             />
           </div>
           <Select
@@ -127,62 +127,64 @@ export function InventarioListado() {
       </div>
 
       {/* Tabla */}
-      <div className="bg-white dark:bg-zinc-900 rounded-xl border border-gray-100 dark:border-zinc-800 shadow-sm overflow-hidden">
+      <div className="rounded-xl border overflow-hidden" style={{ background: 'var(--card)', borderColor: 'var(--card-border)' }}>
         {isLoading ? (
-          <div className="flex justify-center py-12">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-700" />
+          <div className="p-4 space-y-2">
+            {[...Array(8)].map((_, i) => (
+              <div key={i} className="skeleton h-10 rounded-md" />
+            ))}
           </div>
         ) : (
           <table className="w-full text-sm">
-            <thead className="bg-gray-50 dark:bg-zinc-800 border-b border-gray-100 dark:border-zinc-700">
+            <thead className="border-b" style={{ background: 'var(--muted)', borderColor: 'var(--card-border)' }}>
               <tr>
-                <th className="px-4 py-3 text-left font-medium text-gray-600 dark:text-zinc-400">Nombre</th>
-                <th className="px-4 py-3 text-left font-medium text-gray-600 dark:text-zinc-400">Categoría</th>
-                <th className="px-4 py-3 text-left font-medium text-gray-600 dark:text-zinc-400">Marca / Modelo</th>
-                <th className="px-4 py-3 text-left font-medium text-gray-600 dark:text-zinc-400">Nº Serie</th>
-                <th className="px-4 py-3 text-left font-medium text-gray-600 dark:text-zinc-400">Estado</th>
-                <th className="px-4 py-3 text-left font-medium text-gray-600 dark:text-zinc-400">Cant.</th>
-                <th className="px-4 py-3" />
+                <th className="px-4 py-2.5 text-left text-2xs font-semibold text-zinc-400 dark:text-zinc-500 uppercase tracking-widest">Nombre</th>
+                <th className="px-4 py-2.5 text-left text-2xs font-semibold text-zinc-400 dark:text-zinc-500 uppercase tracking-widest">Categoría</th>
+                <th className="px-4 py-2.5 text-left text-2xs font-semibold text-zinc-400 dark:text-zinc-500 uppercase tracking-widest">Marca / Modelo</th>
+                <th className="px-4 py-2.5 text-left text-2xs font-semibold text-zinc-400 dark:text-zinc-500 uppercase tracking-widest">Nº Serie</th>
+                <th className="px-4 py-2.5 text-left text-2xs font-semibold text-zinc-400 dark:text-zinc-500 uppercase tracking-widest">Estado</th>
+                <th className="px-4 py-2.5 text-right text-2xs font-semibold text-zinc-400 dark:text-zinc-500 uppercase tracking-widest">Cant.</th>
+                <th className="px-4 py-2.5 w-16" />
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-50 dark:divide-zinc-800">
+            <tbody className="divide-y" style={{ borderColor: 'var(--card-border)' }}>
               {data?.contenido.length === 0 && (
                 <tr>
-                  <td colSpan={7} className="text-center py-10 text-gray-400 dark:text-zinc-500">
+                  <td colSpan={7} className="text-center py-10 text-zinc-400 dark:text-zinc-500">
                     No se encontró material con los filtros aplicados
                   </td>
                 </tr>
               )}
               {data?.contenido.map((m) => (
-                <tr key={m.id} className="hover:bg-gray-50 dark:hover:bg-zinc-800 transition-colors">
-                  <td className="px-4 py-3 font-medium text-gray-900 dark:text-zinc-100">{m.nombre}</td>
-                  <td className="px-4 py-3 text-gray-600 dark:text-zinc-400">{m.categoria.nombre}</td>
-                  <td className="px-4 py-3 text-gray-600 dark:text-zinc-400">
+                <tr key={m.id} className="h-10 hover:bg-zinc-50 dark:hover:bg-zinc-800/50 transition-colors">
+                  <td className="px-4 font-medium text-zinc-900 dark:text-zinc-100">{m.nombre}</td>
+                  <td className="px-4 text-zinc-500 dark:text-zinc-400">{m.categoria.nombre}</td>
+                  <td className="px-4 text-zinc-500 dark:text-zinc-400">
                     {[m.marca, m.modelo].filter(Boolean).join(' · ') || '—'}
                   </td>
-                  <td className="px-4 py-3 text-gray-500 dark:text-zinc-500 font-mono text-xs">
+                  <td className="px-4 text-zinc-400 dark:text-zinc-500 font-mono text-xs">
                     {m.numeroSerie ?? '—'}
                   </td>
-                  <td className="px-4 py-3">
+                  <td className="px-4">
                     <EstadoBadge estado={m.estado} />
                   </td>
-                  <td className="px-4 py-3 text-gray-600 dark:text-zinc-400 text-center">{m.cantidad}</td>
-                  <td className="px-4 py-3">
-                    <div className="flex items-center gap-1 justify-end">
+                  <td className="px-4 text-zinc-600 dark:text-zinc-400 text-right tabular">{m.cantidad}</td>
+                  <td className="px-4">
+                    <div className="flex items-center gap-0.5 justify-end">
                       <button
                         onClick={() => abrirEditar(m)}
-                        className="p-1.5 text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 rounded transition-colors"
+                        className="p-1.5 text-zinc-300 dark:text-zinc-600 hover:text-blue-600 dark:hover:text-blue-400 rounded-md hover:bg-blue-50 dark:hover:bg-blue-950/30 transition-colors"
                         title="Editar"
                       >
-                        <Pencil className="h-4 w-4" />
+                        <Pencil className="h-3.5 w-3.5" />
                       </button>
                       <button
                         onClick={() => setConfirmarBaja(m)}
                         disabled={m.estado === 'EN_EVENTO'}
-                        className="p-1.5 text-gray-400 hover:text-red-600 dark:hover:text-red-400 rounded transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+                        className="p-1.5 text-zinc-300 dark:text-zinc-600 hover:text-red-600 dark:hover:text-red-400 rounded-md hover:bg-red-50 dark:hover:bg-red-950/30 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
                         title="Dar de baja"
                       >
-                        <Trash2 className="h-4 w-4" />
+                        <Trash2 className="h-3.5 w-3.5" />
                       </button>
                     </div>
                   </td>

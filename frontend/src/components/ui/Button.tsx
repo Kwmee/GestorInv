@@ -9,8 +9,8 @@ interface Props extends ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 const varianteClases = {
-  primario:   'bg-zinc-900 hover:bg-zinc-800 text-white border-zinc-900 dark:bg-zinc-100 dark:hover:bg-white dark:text-zinc-900 dark:border-transparent',
-  secundario: 'bg-white hover:bg-gray-50 text-gray-700 border-gray-200 shadow-sm dark:bg-zinc-800 dark:hover:bg-zinc-700 dark:text-zinc-200 dark:border-zinc-700',
+  primario:   'bg-blue-600 hover:bg-blue-700 text-white border-transparent dark:bg-blue-600 dark:hover:bg-blue-700',
+  secundario: 'bg-white hover:bg-zinc-50 text-zinc-700 border-zinc-200 shadow-sm dark:bg-zinc-800 dark:hover:bg-zinc-700 dark:text-zinc-200 dark:border-zinc-700',
   peligro:    'bg-red-600 hover:bg-red-700 text-white border-transparent',
   fantasma:   'bg-transparent hover:bg-gray-100 text-gray-600 border-transparent dark:hover:bg-zinc-800 dark:text-zinc-300',
 }

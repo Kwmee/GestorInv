@@ -12,9 +12,9 @@ export const Input = forwardRef<HTMLInputElement, Props>(
     const inputId = id ?? label?.toLowerCase().replace(/\s+/g, '-')
 
     return (
-      <div className="flex flex-col gap-1">
+      <div className="flex flex-col gap-1.5">
         {label && (
-          <label htmlFor={inputId} className="text-sm font-medium text-gray-700 dark:text-zinc-300">
+          <label htmlFor={inputId} className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
             {label}
           </label>
         )}
@@ -22,15 +22,18 @@ export const Input = forwardRef<HTMLInputElement, Props>(
           id={inputId}
           ref={ref}
           className={clsx(
-            'rounded-md border px-3 py-2 text-sm shadow-sm bg-white dark:bg-zinc-900 dark:text-zinc-100',
-            'focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:focus:ring-blue-500 dark:focus:border-blue-500',
-            'disabled:bg-gray-50 disabled:text-gray-500 dark:disabled:bg-zinc-800 dark:disabled:text-zinc-500',
-            error ? 'border-red-400' : 'border-gray-300 dark:border-zinc-700',
+            'h-9 rounded-md border px-3 text-sm',
+            'transition-shadow duration-100',
+            'focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500',
+            'disabled:opacity-50 disabled:cursor-not-allowed',
+            error
+              ? 'border-red-400 bg-red-50/50 dark:border-red-700'
+              : 'border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100',
             className
           )}
           {...props}
         />
-        {error && <p className="text-xs text-red-600">{error}</p>}
+        {error && <p className="text-xs text-red-600 dark:text-red-400">{error}</p>}
       </div>
     )
   }
