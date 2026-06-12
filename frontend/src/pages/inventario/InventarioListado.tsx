@@ -90,16 +90,17 @@ export function InventarioListado() {
         </div>
       </div>
 
-      {/* Filtros */}
-      <div className="rounded-xl border p-4" style={{ background: 'var(--card)', borderColor: 'var(--card-border)' }}>
-        <div className="flex flex-wrap gap-3">
+      {/* Tabla */}
+      <div className="rounded-xl border overflow-hidden" style={{ background: 'var(--card)', borderColor: 'var(--card-border)' }}>
+        {/* Filtros */}
+        <div className="px-4 py-3 border-b flex flex-wrap gap-3" style={{ borderColor: 'var(--card-border)' }}>
           <div className="relative flex-1 min-w-48">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 dark:text-zinc-500" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-400 dark:text-zinc-500" />
             <input
               placeholder="Buscar por nombre, marca o modelo..."
               value={busqueda}
               onChange={(e) => { setBusqueda(e.target.value); setPagina(0) }}
-              className="w-full pl-9 pr-3 h-9 text-sm border border-zinc-200 dark:border-zinc-700 rounded-md bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500 transition-shadow"
+              className="w-full pl-9 pr-3 h-9 text-sm border border-zinc-200 dark:border-zinc-700 rounded-md bg-transparent text-zinc-900 dark:text-zinc-100 focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500 transition-shadow"
             />
           </div>
           <Select
@@ -124,10 +125,6 @@ export function InventarioListado() {
             ))}
           </Select>
         </div>
-      </div>
-
-      {/* Tabla */}
-      <div className="rounded-xl border overflow-hidden" style={{ background: 'var(--card)', borderColor: 'var(--card-border)' }}>
         {isLoading ? (
           <div className="p-4 space-y-2">
             {[...Array(8)].map((_, i) => (
