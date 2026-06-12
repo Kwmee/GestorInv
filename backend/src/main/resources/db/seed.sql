@@ -425,3 +425,373 @@ VALUES
     (SELECT id FROM material WHERE numero_serie='BL-DJM-001'),
     1, NULL, 'PENDIENTE', NULL, NULL
 );
+
+-- ============================================================
+-- DATOS EXTRA — más volumen para demo
+-- ============================================================
+
+-- ------------------------------------------------------------
+-- CLIENTES adicionales
+-- ------------------------------------------------------------
+INSERT IGNORE INTO clientes (razon_social, nif_cif, telefono, email, direccion, tipo) VALUES
+('Primavera Sound S.L.',          'B66891234', '+34 934 120 300', 'tech@primaverasound.com',        'Parc del Fòrum, Barcelona',                 'EMPRESA'),
+('Mad Cool Festival S.L.',        'B87654321', '+34 911 234 567', 'produccion@madcoolfestival.com', 'Espacio Mad Cool, Madrid',                  'EMPRESA'),
+('Universidad Complutense Madrid', 'Q2818014C', '+34 913 940 000', 'cultura@ucm.es',                 'Av. Complutense s/n, Madrid',               'EMPRESA'),
+('Radio 3 - RTVE',                'Q2801024H', '+34 917 417 000', 'produccion@radio3.rtve.es',      'C/ José Gutiérrez Abascal 4, Madrid',       'EMPRESA'),
+('Coproducciones Live S.L.',      'B55123456', '+34 935 670 890', 'ivan@coproduccioneslive.com',    'Carrer de Consell de Cent 123, Barcelona',  'EMPRESA'),
+('Jorge Mena Fuentes',            NULL,        '+34 622 345 678', 'jorge.mena@hotmail.com',          'C/ Goya 88 4D, Madrid',                     'PARTICULAR'),
+('Club Social Retiro',            'G28901234', '+34 914 500 210', 'eventos@clubretiro.org',          'Parque del Retiro, Madrid',                 'EMPRESA'),
+('Carnaval de Cádiz S.L.',        'B11987654', '+34 956 220 100', 'tecnico@carnavalcadiz.com',      'Plaza del Palillero s/n, Cádiz',            'EMPRESA');
+
+-- ------------------------------------------------------------
+-- MATERIAL adicional — PA
+-- ------------------------------------------------------------
+INSERT IGNORE INTO material (categoria_id, nombre, marca, modelo, numero_serie, cantidad, estado, valor_unitario, es_fungible, stock_minimo) VALUES
+(1, 'Line Array V-DOSC',      'L-Acoustics',      'V-DOSC',     'PA-VDOSC-001', 8,  'DISPONIBLE', 4800.00, FALSE, 2),
+(1, 'Consola Digital X32',    'Behringer',        'X32',        'PA-X32-001',   2,  'DISPONIBLE', 2800.00, FALSE, 0),
+(1, 'Subwoofer SB28',         'L-Acoustics',      'SB28',       'PA-SB28-001',  4,  'DISPONIBLE', 4200.00, FALSE, 1),
+(1, 'IEM In-Ear Monitor',     'Sennheiser',       'EW 300 IEM', 'PA-IEM-001',   8,  'DISPONIBLE', 1200.00, FALSE, 2),
+(1, 'Altavoz Columna',        'Bose',             'F1 Model 812','PA-BOSE-001', 4,  'DISPONIBLE', 900.00,  FALSE, 0),
+(1, 'Microfono Condenser',    'Neumann',          'KMS 104',    'PA-NEUM-001',  4,  'DISPONIBLE', 680.00,  FALSE, 1);
+
+-- ------------------------------------------------------------
+-- MATERIAL adicional — Iluminacion
+-- ------------------------------------------------------------
+INSERT IGNORE INTO material (categoria_id, nombre, marca, modelo, numero_serie, cantidad, estado, valor_unitario, es_fungible, stock_minimo) VALUES
+(2, 'Pixel Bar LED',          'Chauvet',      'COLORband PiX',  'IL-PIX-001',   12, 'DISPONIBLE', 350.00,  FALSE, 4),
+(2, 'Cabeza Movil Spot',      'Martin',       'MAC Aura XB',    'IL-MAC-001',   8,  'DISPONIBLE', 4200.00, FALSE, 2),
+(2, 'Laser RG',               'Kvant',        'Atom 40R',       'IL-LASER-001', 2,  'DISPONIBLE', 3800.00, FALSE, 0),
+(2, 'Blinder LED 4 ojos',     'Elation',      'Blendo 4',       'IL-BLIND-001', 6,  'DISPONIBLE', 520.00,  FALSE, 2),
+(2, 'Neon Flex RGB 10m',      'Eurolite',     'Flex 1620',      NULL,           20, 'DISPONIBLE', 85.00,   FALSE, 4),
+(2, 'Moving Head Hybrid',     'Claypaky',     'Sharpy Plus',    'IL-CLAY-001',  6,  'DISPONIBLE', 5800.00, FALSE, 2);
+
+-- ------------------------------------------------------------
+-- MATERIAL adicional — Cables y Consumibles
+-- ------------------------------------------------------------
+INSERT IGNORE INTO material (categoria_id, nombre, marca, modelo, numero_serie, cantidad, estado, valor_unitario, es_fungible, stock_minimo) VALUES
+(4, 'Fibra Optica 50m',       'Neutrik',   'opticalCON',    NULL, 4,  'DISPONIBLE', 380.00, FALSE, 1),
+(4, 'AES/EBU 10m',            'Van Damme', 'Digital Blue',  NULL, 12, 'DISPONIBLE', 24.00,  FALSE, 3),
+(4, 'IEC C13 3m',             'Generico',  NULL,            NULL, 30, 'DISPONIBLE', 6.00,   FALSE, 8),
+(6, 'Tape Blanca 50m',        'Advance',   NULL,            NULL, 40, 'DISPONIBLE', 3.50,   TRUE,  10),
+(6, 'Gobo Papel Aluminio',    'GAM',       NULL,            NULL, 50, 'DISPONIBLE', 1.20,   TRUE,  10),
+(6, 'Spray Contactos',        'WD-40',     NULL,            NULL, 10, 'DISPONIBLE', 8.50,   TRUE,  3);
+
+-- ------------------------------------------------------------
+-- EVENTOS adicionales
+-- ------------------------------------------------------------
+INSERT IGNORE INTO eventos (cliente_id, trabajador_id, nombre, lugar, fecha_inicio, fecha_fin, estado, observaciones) VALUES
+-- EN_CARGA: un segundo evento en carga
+(
+    (SELECT id FROM clientes WHERE nif_cif='B66891234'),
+    (SELECT id FROM trabajadores WHERE nombre='David Fernández'),
+    'Primavera Sound 2026 - Escenario Moritz',
+    'Parc del Fòrum, Barcelona',
+    '2026-06-29 14:00:00', '2026-07-02 04:00:00',
+    'EN_CARGA',
+    '4 dias de festival. Escenario secundario 3000 personas. Carga programada para el 28.'
+),
+-- DEVOLVIENDO: material en ruta de vuelta
+(
+    (SELECT id FROM clientes WHERE nif_cif='B87654321'),
+    (SELECT id FROM trabajadores WHERE nombre='Sara Molina'),
+    'Mad Cool 2026 - Escenario Ámsterdam',
+    'Espacio Mad Cool, Madrid',
+    '2026-06-05 16:00:00', '2026-06-08 03:00:00',
+    'DEVOLVIENDO',
+    'Escenario mediano. Material en ruta de vuelta. Llegada prevista esta tarde.'
+),
+-- DEVOLVIENDO: segunda devolución activa
+(
+    (SELECT id FROM clientes WHERE nif_cif='B55123456'),
+    (SELECT id FROM trabajadores WHERE nombre='Roberto Sánchez'),
+    'Gala Premios Coproduccion 2026',
+    'Palacio de los Deportes, Madrid',
+    '2026-06-10 19:00:00', '2026-06-11 01:00:00',
+    'DEVOLVIENDO',
+    'Entrega de premios anuales. Material saliendo, todo OK segun el tecnico.'
+),
+-- ACTIVO adicional
+(
+    (SELECT id FROM clientes WHERE nif_cif='Q2818014C'),
+    (SELECT id FROM trabajadores WHERE nombre='Ana López'),
+    'Concierto Fin de Curso UCM',
+    'Paraninfo Universidad Complutense, Madrid',
+    '2026-06-11 18:00:00', '2026-06-13 22:00:00',
+    'ACTIVO',
+    'Evento universitario. Auditorio interior 800 personas. Setup delicado por acustica.'
+),
+-- PLANIFICADO adicionales
+(
+    (SELECT id FROM clientes WHERE nif_cif='Q2801024H'),
+    (SELECT id FROM trabajadores WHERE nombre='Juan Pérez'),
+    'Radio 3 en Vivo - Concierto Verano',
+    'Jardín del Príncipe de Anglona, Madrid',
+    '2026-07-18 20:00:00', '2026-07-18 23:00:00',
+    'PLANIFICADO',
+    'Grabacion en directo para Radio 3. Requiere split de señal para mesa de la radio.'
+),
+(
+    (SELECT id FROM clientes WHERE nif_cif='G28901234'),
+    NULL,
+    'Verbena Verano Club Retiro',
+    'Club Social Retiro, Madrid',
+    '2026-08-01 21:00:00', '2026-08-02 03:00:00',
+    'PLANIFICADO',
+    'Evento privado para socios. DJs en el jardín exterior. Presupuesto ajustado.'
+),
+(
+    (SELECT id FROM clientes WHERE nif_cif='B11987654'),
+    (SELECT id FROM trabajadores WHERE nombre='Pedro Martínez'),
+    'Carnaval de Cadiz - Gala Final',
+    'Gran Teatro Falla, Cádiz',
+    '2026-02-14 20:00:00', '2026-02-15 02:00:00',
+    'FINALIZADO',
+    'Gala final del carnaval. Teatro lleno. Devolución sin incidencias al dia siguiente.'
+),
+(
+    (SELECT id FROM clientes WHERE email='jorge.mena@hotmail.com'),
+    (SELECT id FROM trabajadores WHERE nombre='Laura Vidal' LIMIT 1),
+    'Fiesta 40 Aniversario Jorge Mena',
+    'Restaurante Botin, Madrid',
+    '2026-04-26 21:00:00', '2026-04-27 04:00:00',
+    'FINALIZADO',
+    'Fiesta privada 80 personas. Sistema de musica ambiente + microfono discurso.'
+);
+
+-- Añadir trabajadores con email/usuario para la FK
+INSERT IGNORE INTO trabajadores (nombre, activo) VALUES
+('Laura Vidal',  TRUE),
+('Carlos Ramos', TRUE);
+
+-- ------------------------------------------------------------
+-- LINEAS DE EVENTO — Primavera Sound EN_CARGA
+-- ------------------------------------------------------------
+INSERT IGNORE INTO lineas_evento (evento_id, material_id, cantidad, estado_devolucion) VALUES
+(
+    (SELECT id FROM eventos WHERE nombre='Primavera Sound 2026 - Escenario Moritz'),
+    (SELECT id FROM material WHERE numero_serie='PA-VDOSC-001'), 8, 'PENDIENTE'
+),
+(
+    (SELECT id FROM eventos WHERE nombre='Primavera Sound 2026 - Escenario Moritz'),
+    (SELECT id FROM material WHERE numero_serie='PA-SB28-001'), 4, 'PENDIENTE'
+),
+(
+    (SELECT id FROM eventos WHERE nombre='Primavera Sound 2026 - Escenario Moritz'),
+    (SELECT id FROM material WHERE numero_serie='PA-X32-001'), 1, 'PENDIENTE'
+),
+(
+    (SELECT id FROM eventos WHERE nombre='Primavera Sound 2026 - Escenario Moritz'),
+    (SELECT id FROM material WHERE numero_serie='IL-MAC-001'), 8, 'PENDIENTE'
+),
+(
+    (SELECT id FROM eventos WHERE nombre='Primavera Sound 2026 - Escenario Moritz'),
+    (SELECT id FROM material WHERE numero_serie='IL-PIX-001'), 12, 'PENDIENTE'
+),
+(
+    (SELECT id FROM eventos WHERE nombre='Primavera Sound 2026 - Escenario Moritz'),
+    (SELECT id FROM material WHERE numero_serie='BL-NORD-001'), 1, 'PENDIENTE'
+);
+
+-- ------------------------------------------------------------
+-- LINEAS — Mad Cool DEVOLVIENDO
+-- ------------------------------------------------------------
+INSERT IGNORE INTO lineas_evento (evento_id, material_id, cantidad, estado_devolucion) VALUES
+(
+    (SELECT id FROM eventos WHERE nombre='Mad Cool 2026 - Escenario Ámsterdam'),
+    (SELECT id FROM material WHERE numero_serie='PA-J8-001'), 6, 'PENDIENTE'
+),
+(
+    (SELECT id FROM eventos WHERE nombre='Mad Cool 2026 - Escenario Ámsterdam'),
+    (SELECT id FROM material WHERE numero_serie='PA-CL5-001'), 1, 'PENDIENTE'
+),
+(
+    (SELECT id FROM eventos WHERE nombre='Mad Cool 2026 - Escenario Ámsterdam'),
+    (SELECT id FROM material WHERE numero_serie='IL-CLAY-001'), 6, 'PENDIENTE'
+),
+(
+    (SELECT id FROM eventos WHERE nombre='Mad Cool 2026 - Escenario Ámsterdam'),
+    (SELECT id FROM material WHERE numero_serie='IL-LASER-001'), 2, 'PENDIENTE'
+);
+
+-- ------------------------------------------------------------
+-- LINEAS — Gala Premios DEVOLVIENDO
+-- ------------------------------------------------------------
+INSERT IGNORE INTO lineas_evento (evento_id, material_id, cantidad, estado_devolucion) VALUES
+(
+    (SELECT id FROM eventos WHERE nombre='Gala Premios Coproduccion 2026'),
+    (SELECT id FROM material WHERE numero_serie='PA-NEUM-001'), 4, 'OK'
+),
+(
+    (SELECT id FROM eventos WHERE nombre='Gala Premios Coproduccion 2026'),
+    (SELECT id FROM material WHERE numero_serie='PA-SENNH-001'), 4, 'OK'
+),
+(
+    (SELECT id FROM eventos WHERE nombre='Gala Premios Coproduccion 2026'),
+    (SELECT id FROM material WHERE numero_serie='IL-BLIND-001'), 6, 'PENDIENTE'
+),
+(
+    (SELECT id FROM eventos WHERE nombre='Gala Premios Coproduccion 2026'),
+    (SELECT id FROM material WHERE numero_serie='IL-HAZER-001'), 2, 'CON_INCIDENCIA'
+);
+
+-- ------------------------------------------------------------
+-- LINEAS — UCM ACTIVO
+-- ------------------------------------------------------------
+INSERT IGNORE INTO lineas_evento (evento_id, material_id, cantidad, estado_devolucion) VALUES
+(
+    (SELECT id FROM eventos WHERE nombre='Concierto Fin de Curso UCM'),
+    (SELECT id FROM material WHERE numero_serie='PA-M2-001'), 4, 'PENDIENTE'
+),
+(
+    (SELECT id FROM eventos WHERE nombre='Concierto Fin de Curso UCM'),
+    (SELECT id FROM material WHERE numero_serie='PA-IEM-001'), 8, 'PENDIENTE'
+),
+(
+    (SELECT id FROM eventos WHERE nombre='Concierto Fin de Curso UCM'),
+    (SELECT id FROM material WHERE numero_serie='IL-LED-001'), 8, 'PENDIENTE'
+),
+(
+    (SELECT id FROM eventos WHERE nombre='Concierto Fin de Curso UCM'),
+    (SELECT id FROM material WHERE numero_serie='IL-WASH-001'), 4, 'PENDIENTE'
+),
+(
+    (SELECT id FROM eventos WHERE nombre='Concierto Fin de Curso UCM'),
+    (SELECT id FROM material WHERE numero_serie='BL-PEARL-001'), 1, 'PENDIENTE'
+),
+(
+    (SELECT id FROM eventos WHERE nombre='Concierto Fin de Curso UCM'),
+    (SELECT id FROM material WHERE numero_serie='BL-FEND-001'), 1, 'PENDIENTE'
+);
+
+-- ------------------------------------------------------------
+-- LINEAS — Carnaval Cadiz FINALIZADO
+-- ------------------------------------------------------------
+INSERT IGNORE INTO lineas_evento (evento_id, material_id, cantidad, estado_devolucion) VALUES
+(
+    (SELECT id FROM eventos WHERE nombre='Carnaval de Cadiz - Gala Final'),
+    (SELECT id FROM material WHERE numero_serie='PA-K2-001'), 6, 'OK'
+),
+(
+    (SELECT id FROM eventos WHERE nombre='Carnaval de Cadiz - Gala Final'),
+    (SELECT id FROM material WHERE numero_serie='PA-KS28-001'), 2, 'OK'
+),
+(
+    (SELECT id FROM eventos WHERE nombre='Carnaval de Cadiz - Gala Final'),
+    (SELECT id FROM material WHERE numero_serie='IL-ROBE-001'), 8, 'OK'
+),
+(
+    (SELECT id FROM eventos WHERE nombre='Carnaval de Cadiz - Gala Final'),
+    (SELECT id FROM material WHERE numero_serie='IL-GMA2-001'), 1, 'OK'
+),
+(
+    (SELECT id FROM eventos WHERE nombre='Carnaval de Cadiz - Gala Final'),
+    (SELECT id FROM material WHERE numero_serie='PA-PM5D-001'), 1, 'OK'
+);
+
+-- ------------------------------------------------------------
+-- LINEAS — Fiesta 40 Aniversario FINALIZADO
+-- ------------------------------------------------------------
+INSERT IGNORE INTO lineas_evento (evento_id, material_id, cantidad, estado_devolucion) VALUES
+(
+    (SELECT id FROM eventos WHERE nombre='Fiesta 40 Aniversario Jorge Mena'),
+    (SELECT id FROM material WHERE numero_serie='PA-BOSE-001'), 4, 'OK'
+),
+(
+    (SELECT id FROM eventos WHERE nombre='Fiesta 40 Aniversario Jorge Mena'),
+    (SELECT id FROM material WHERE numero_serie='IL-LED-001'), 4, 'OK'
+),
+(
+    (SELECT id FROM eventos WHERE nombre='Fiesta 40 Aniversario Jorge Mena'),
+    (SELECT id FROM material WHERE numero_serie='BL-DJM-001'), 1, 'OK'
+);
+
+-- ------------------------------------------------------------
+-- ALBARANES adicionales
+-- ------------------------------------------------------------
+INSERT IGNORE INTO albaranes (evento_id, trabajador_id, numero, tipo, fecha_emision) VALUES
+(
+    (SELECT id FROM eventos WHERE nombre='Primavera Sound 2026 - Escenario Moritz'),
+    (SELECT id FROM trabajadores WHERE nombre='David Fernández'),
+    '2026-0010', 'SALIDA', '2026-06-27 09:00:00'
+),
+(
+    (SELECT id FROM eventos WHERE nombre='Mad Cool 2026 - Escenario Ámsterdam'),
+    (SELECT id FROM trabajadores WHERE nombre='Sara Molina'),
+    '2026-0011', 'SALIDA', '2026-06-05 10:00:00'
+),
+(
+    (SELECT id FROM eventos WHERE nombre='Gala Premios Coproduccion 2026'),
+    (SELECT id FROM trabajadores WHERE nombre='Roberto Sánchez'),
+    '2026-0012', 'SALIDA', '2026-06-10 14:00:00'
+),
+(
+    (SELECT id FROM eventos WHERE nombre='Concierto Fin de Curso UCM'),
+    (SELECT id FROM trabajadores WHERE nombre='Ana López'),
+    '2026-0013', 'SALIDA', '2026-06-10 16:00:00'
+),
+(
+    (SELECT id FROM eventos WHERE nombre='Carnaval de Cadiz - Gala Final'),
+    (SELECT id FROM trabajadores WHERE nombre='Pedro Martínez'),
+    '2026-0014', 'SALIDA', '2026-02-13 12:00:00'
+),
+(
+    (SELECT id FROM eventos WHERE nombre='Carnaval de Cadiz - Gala Final'),
+    (SELECT id FROM trabajadores WHERE nombre='Pedro Martínez'),
+    '2026-0015', 'DEVOLUCION', '2026-02-15 11:00:00'
+),
+(
+    (SELECT id FROM eventos WHERE nombre='Fiesta 40 Aniversario Jorge Mena'),
+    (SELECT id FROM trabajadores WHERE nombre='Laura Vidal'),
+    '2026-0016', 'SALIDA', '2026-04-26 17:00:00'
+),
+(
+    (SELECT id FROM eventos WHERE nombre='Fiesta 40 Aniversario Jorge Mena'),
+    (SELECT id FROM trabajadores WHERE nombre='Laura Vidal'),
+    '2026-0017', 'DEVOLUCION', '2026-04-27 12:00:00'
+),
+(
+    (SELECT id FROM eventos WHERE nombre='Concierto Indio Solari - La Riviera'),
+    (SELECT id FROM trabajadores WHERE nombre='Juan Pérez'),
+    '2026-0018', 'DEVOLUCION', '2026-06-15 11:00:00'
+),
+(
+    (SELECT id FROM eventos WHERE nombre='Festival Electronica de Verano BCN'),
+    (SELECT id FROM trabajadores WHERE nombre='María García'),
+    '2026-0019', 'SALIDA', '2026-06-27 10:00:00'
+);
+
+-- ------------------------------------------------------------
+-- CHECKLIST — Primavera Sound (EN_CARGA, en progreso)
+-- ------------------------------------------------------------
+INSERT IGNORE INTO checklist_carga (evento_id, material_id, cantidad_planificada, cantidad_cargada, estado, notas, confirmado_en)
+VALUES
+(
+    (SELECT id FROM eventos WHERE nombre='Primavera Sound 2026 - Escenario Moritz'),
+    (SELECT id FROM material WHERE numero_serie='PA-VDOSC-001'),
+    8, 8, 'CARGADO', NULL, '2026-06-27 07:30:00'
+),
+(
+    (SELECT id FROM eventos WHERE nombre='Primavera Sound 2026 - Escenario Moritz'),
+    (SELECT id FROM material WHERE numero_serie='PA-SB28-001'),
+    4, 4, 'CARGADO', NULL, '2026-06-27 07:45:00'
+),
+(
+    (SELECT id FROM eventos WHERE nombre='Primavera Sound 2026 - Escenario Moritz'),
+    (SELECT id FROM material WHERE numero_serie='PA-X32-001'),
+    1, NULL, 'PENDIENTE', 'Pendiente de sacar del flight case', NULL
+),
+(
+    (SELECT id FROM eventos WHERE nombre='Primavera Sound 2026 - Escenario Moritz'),
+    (SELECT id FROM material WHERE numero_serie='IL-MAC-001'),
+    8, 6, 'PARCIAL', '2 cabezas en revision por el tecnico de luces', '2026-06-27 08:00:00'
+),
+(
+    (SELECT id FROM eventos WHERE nombre='Primavera Sound 2026 - Escenario Moritz'),
+    (SELECT id FROM material WHERE numero_serie='IL-PIX-001'),
+    12, NULL, 'PENDIENTE', NULL, NULL
+),
+(
+    (SELECT id FROM eventos WHERE nombre='Primavera Sound 2026 - Escenario Moritz'),
+    (SELECT id FROM material WHERE numero_serie='BL-NORD-001'),
+    1, 1, 'CARGADO', NULL, '2026-06-27 08:15:00'
+);
