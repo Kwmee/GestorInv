@@ -35,6 +35,9 @@ albaranes-pdf/
 .env.production
 backend/src/main/resources/application-prod.properties
 
+# ===== Datos locales (no subir al repo) =====
+backend/src/main/resources/db/seed.sql
+
 # ===== Logs de desarrollo =====
 logs/
 
