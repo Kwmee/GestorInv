@@ -262,7 +262,7 @@ public class SeedDataLoader implements ApplicationRunner {
             new Object[]{"Moby Dick Noche de Jazz", "Moby Dick Club, Madrid", "Moby Dick", LocalDateTime.of(2026, 5, 30, 22, 30), LocalDateTime.of(2026, 5, 31, 3, 0), EstadoEvento.FINALIZADO},
             new Object[]{"Arenal Sound Preventa", "Burriana, Castellón", "Arenal Sound", LocalDateTime.of(2026, 6, 6, 17, 0), LocalDateTime.of(2026, 6, 6, 23, 30), EstadoEvento.FINALIZADO},
             new Object[]{"Sala Caracol Junio Night", "Sala Caracol, Madrid", "Caracol", LocalDateTime.of(2026, 6, 20, 22, 0), LocalDateTime.of(2026, 6, 21, 2, 0), EstadoEvento.PLANIFICADO},
-            new Object[]{"Vodafone Yu Showcase Verano", "WiZink Center, Madrid", "Vodafone", LocalDateTime.of(2026, 7, 4, 20, 0), LocalDateTime.of(2026, 7, 4, 24, 0), EstadoEvento.PLANIFICADO},
+            new Object[]{"Vodafone Yu Showcase Verano", "WiZink Center, Madrid", "Vodafone", LocalDateTime.of(2026, 7, 4, 20, 0), LocalDateTime.of(2026, 7, 5, 0, 0), EstadoEvento.PLANIFICADO},
             new Object[]{"FIB 2026 Día 1", "Recinto FIB, Benicàssim", "FIB", LocalDateTime.of(2026, 7, 17, 17, 0), LocalDateTime.of(2026, 7, 18, 5, 0), EstadoEvento.PLANIFICADO},
             new Object[]{"FIB 2026 Día 2", "Recinto FIB, Benicàssim", "FIB", LocalDateTime.of(2026, 7, 18, 17, 0), LocalDateTime.of(2026, 7, 19, 5, 0), EstadoEvento.PLANIFICADO},
             new Object[]{"Arenal Sound 2026 Main Stage", "Playa Arenal, Burriana", "Arenal Sound", LocalDateTime.of(2026, 8, 1, 17, 0), LocalDateTime.of(2026, 8, 3, 5, 0), EstadoEvento.PLANIFICADO},
