@@ -18,7 +18,7 @@ public class InformesController {
     private final InformesService informesService;
 
     @GetMapping
-    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'OPERARIO')")
     public ResponseEntity<InformesResponse> obtenerInformes() {
         return ResponseEntity.ok(informesService.obtenerInformes());
     }
