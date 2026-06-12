@@ -57,7 +57,7 @@ public class InformesService {
         long total        = disponible + enEvento + enReparacion + baja;
 
         BigDecimal valorTotal = materialRepository.findAll().stream()
-                .filter(m -> m.getValorUnitario() != null && m.getActivo())
+                .filter(m -> m.getValorUnitario() != null && Boolean.TRUE.equals(m.getActivo()))
                 .map(m -> m.getValorUnitario().multiply(BigDecimal.valueOf(m.getCantidad())))
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
@@ -75,7 +75,7 @@ public class InformesService {
         List<Material> todos = materialRepository.findAll();
 
         Map<String, List<Material>> porCategoria = todos.stream()
-                .filter(m -> m.getActivo())
+                .filter(m -> Boolean.TRUE.equals(m.getActivo()) && m.getCategoria() != null)
                 .collect(Collectors.groupingBy(m -> m.getCategoria().getNombre()));
 
         return porCategoria.entrySet().stream()
