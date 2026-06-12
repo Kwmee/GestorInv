@@ -2,8 +2,11 @@ package com.empresa.gestorinventario.service;
 
 import com.empresa.gestorinventario.exception.NegocioException;
 import com.empresa.gestorinventario.exception.RecursoNoEncontradoException;
+import com.empresa.gestorinventario.model.dto.request.BulkEstadoRequest;
 import com.empresa.gestorinventario.model.dto.request.MaterialRequest;
 import com.empresa.gestorinventario.model.dto.response.MaterialResponse;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import com.empresa.gestorinventario.model.dto.response.PaginaResponse;
 import com.empresa.gestorinventario.model.entity.CategoriaMaterial;
 import com.empresa.gestorinventario.model.entity.HistorialEstado;
@@ -19,6 +22,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.List;
 
 @Service
@@ -149,6 +154,61 @@ public class MaterialService {
                 .creadoEn(h.getFecha())
                 .build())
             .toList();
+    }
+
+    @Transactional
+    public void bulkCambiarEstado(BulkEstadoRequest request) {
+        if (request.getEstado() == EstadoMaterial.EN_EVENTO) {
+            throw new NegocioException("No se puede asignar EN_EVENTO manualmente");
+        }
+        List<Material> materiales = materialRepository.findAllById(request.getIds());
+        materiales.forEach(m -> {
+            if (m.getEstado() == EstadoMaterial.EN_EVENTO) {
+                throw new NegocioException("El material '" + m.getNombre() + "' está en un evento activo");
+            }
+            m.setEstado(request.getEstado());
+            if (request.getEstado() == EstadoMaterial.BAJA) m.setActivo(false);
+        });
+        materialRepository.saveAll(materiales);
+    }
+
+    public byte[] generarExcel(EstadoMaterial estado, Long categoriaId, String busqueda) {
+        List<Material> materiales = materialRepository.buscarParaListado(estado, categoriaId, busqueda);
+        try (XSSFWorkbook wb = new XSSFWorkbook(); ByteArrayOutputStream out = new ByteArrayOutputStream()) {
+            Sheet sheet = wb.createSheet("Inventario");
+            CellStyle headerStyle = wb.createCellStyle();
+            Font font = wb.createFont();
+            font.setBold(true);
+            headerStyle.setFont(font);
+
+            String[] headers = {"ID", "Nombre", "Categoría", "Marca", "Modelo", "Nº Serie", "Estado", "Cantidad", "Valor Unit.", "Fungible"};
+            Row headerRow = sheet.createRow(0);
+            for (int i = 0; i < headers.length; i++) {
+                Cell cell = headerRow.createCell(i);
+                cell.setCellValue(headers[i]);
+                cell.setCellStyle(headerStyle);
+            }
+
+            int rowNum = 1;
+            for (Material m : materiales) {
+                Row row = sheet.createRow(rowNum++);
+                row.createCell(0).setCellValue(m.getId());
+                row.createCell(1).setCellValue(m.getNombre());
+                row.createCell(2).setCellValue(m.getCategoria().getNombre());
+                row.createCell(3).setCellValue(m.getMarca() != null ? m.getMarca() : "");
+                row.createCell(4).setCellValue(m.getModelo() != null ? m.getModelo() : "");
+                row.createCell(5).setCellValue(m.getNumeroSerie() != null ? m.getNumeroSerie() : "");
+                row.createCell(6).setCellValue(m.getEstado().name());
+                row.createCell(7).setCellValue(m.getCantidad());
+                row.createCell(8).setCellValue(m.getValorUnitario() != null ? m.getValorUnitario().doubleValue() : 0);
+                row.createCell(9).setCellValue(m.getEsFungible() ? "Sí" : "No");
+            }
+            for (int i = 0; i < headers.length; i++) sheet.autoSizeColumn(i);
+            wb.write(out);
+            return out.toByteArray();
+        } catch (IOException e) {
+            throw new NegocioException("Error generando Excel");
+        }
     }
 
     public byte[] generarListadoPdf(EstadoMaterial estado, Long categoriaId, String busqueda) {

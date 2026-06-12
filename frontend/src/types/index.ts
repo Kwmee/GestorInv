@@ -2,7 +2,9 @@
 // Enums — deben coincidir con los del backend
 // ============================================================
 
-export type EstadoMaterial = 'DISPONIBLE' | 'EN_EVENTO' | 'EN_REPARACION' | 'BAJA'
+export type EstadoMaterial    = 'DISPONIBLE' | 'EN_EVENTO' | 'EN_REPARACION' | 'BAJA'
+export type EstadoMantenimiento = 'EN_REVISION' | 'REPARANDO' | 'REPARADO' | 'IRREPARABLE'
+export type EstadoPresupuesto   = 'BORRADOR' | 'ENVIADO' | 'ACEPTADO' | 'RECHAZADO' | 'EXPIRADO'
 export type EstadoEvento        = 'PLANIFICADO' | 'EN_CARGA' | 'ACTIVO' | 'DEVOLVIENDO' | 'FINALIZADO' | 'CANCELADO'
 export type EstadoChecklistItem = 'PENDIENTE' | 'CARGADO' | 'PARCIAL' | 'FALTANTE'
 export type TipoAlbaran    = 'SALIDA' | 'DEVOLUCION'
@@ -246,6 +248,79 @@ export interface EmpresaRequest {
   direccion?: string
   telefono?: string
   email?: string
+}
+
+export interface Mantenimiento {
+  id: number
+  material: { id: number; nombre: string; marca?: string; modelo?: string }
+  fechaEntrada: string
+  fechaSalida?: string
+  descripcion: string
+  tecnicoExterno?: string
+  coste?: number
+  estado: EstadoMantenimiento
+  observaciones?: string
+  creadoEn: string
+}
+
+export interface MantenimientoRequest {
+  materialId: number
+  fechaEntrada: string
+  fechaSalida?: string
+  descripcion: string
+  tecnicoExterno?: string
+  coste?: number
+  estado?: EstadoMantenimiento
+  observaciones?: string
+}
+
+export interface LineaPresupuesto {
+  id: number
+  materialId: number
+  materialNombre: string
+  cantidad: number
+  precioUnitario: number
+  subtotal: number
+  descripcion?: string
+}
+
+export interface Presupuesto {
+  id: number
+  numero: string
+  cliente: { id: number; razonSocial: string }
+  fechaEmision: string
+  fechaValidez?: string
+  estado: EstadoPresupuesto
+  descripcion?: string
+  observaciones?: string
+  lineas: LineaPresupuesto[]
+  total: number
+  creadoEn: string
+}
+
+export interface PresupuestoRequest {
+  clienteId: number
+  fechaValidez?: string
+  descripcion?: string
+  observaciones?: string
+  lineas: { materialId: number; cantidad: number; precioUnitario: number; descripcion?: string }[]
+}
+
+export interface BusquedaResponse {
+  material: { id: number; nombre: string; marca?: string; estado: EstadoMaterial; categoriaNombre: string }[]
+  eventos:  { id: number; nombre: string; lugar?: string; estado: EstadoEvento; clienteNombre: string }[]
+  clientes: { id: number; razonSocial: string; email?: string; tipo: TipoCliente }[]
+}
+
+export interface InformesResponse {
+  resumenMaterial: {
+    totalItems: number; disponible: number; enEvento: number; enReparacion: number; baja: number; valorTotal: number
+  }
+  materialPorCategoria: { categoria: string; total: number; disponible: number }[]
+  eventosPorMes: { mes: string; total: number; finalizados: number }[]
+  top5MaterialUsado: { nombre: string; categoria: string; vecesEnEventos: number }[]
+  resumenEventos: { total: number; planificados: number; activos: number; finalizados: number; cancelados: number }
+  resumenMantenimiento: { enRevision: number; reparando: number; reparados: number; irreparables: number }
 }
 
 export interface RedStatus {

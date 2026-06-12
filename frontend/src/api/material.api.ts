@@ -1,5 +1,5 @@
 import axiosClient from './axiosClient'
-import type { CategoriaMaterial, Material, MaterialRequest, PaginaResponse } from '@/types'
+import type { CategoriaMaterial, EstadoMaterial, Material, MaterialRequest, PaginaResponse } from '@/types'
 
 interface FiltrosMaterial {
   estado?: string
@@ -30,4 +30,10 @@ export const materialApi = {
 
   listadoPdf: (filtros: FiltrosMaterial = {}) =>
     axiosClient.get('/material/listado-pdf', { params: filtros, responseType: 'blob' }).then((r) => r.data as Blob),
+
+  exportarExcel: (filtros: FiltrosMaterial = {}) =>
+    axiosClient.get('/material/excel', { params: filtros, responseType: 'blob' }).then((r) => r.data as Blob),
+
+  bulkCambiarEstado: (ids: number[], estado: EstadoMaterial, observaciones?: string) =>
+    axiosClient.put('/material/bulk-estado', { ids, estado, observaciones }),
 }

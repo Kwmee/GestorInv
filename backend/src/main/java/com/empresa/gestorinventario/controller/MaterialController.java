@@ -1,5 +1,6 @@
 package com.empresa.gestorinventario.controller;
 
+import com.empresa.gestorinventario.model.dto.request.BulkEstadoRequest;
 import com.empresa.gestorinventario.model.dto.request.MaterialRequest;
 import com.empresa.gestorinventario.model.dto.response.MaterialResponse;
 import com.empresa.gestorinventario.model.dto.response.PaginaResponse;
@@ -69,6 +70,24 @@ public class MaterialController {
     @GetMapping("/categorias")
     public ResponseEntity<List<CategoriaMaterial>> listarCategorias() {
         return ResponseEntity.ok(categoriaRepository.findAll());
+    }
+
+    @PutMapping("/bulk-estado")
+    public ResponseEntity<Void> bulkCambiarEstado(@Valid @RequestBody BulkEstadoRequest request) {
+        materialService.bulkCambiarEstado(request);
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/excel")
+    public ResponseEntity<byte[]> exportarExcel(
+            @RequestParam(required = false) EstadoMaterial estado,
+            @RequestParam(required = false) Long categoriaId,
+            @RequestParam(required = false) String q) {
+        byte[] excel = materialService.generarExcel(estado, categoriaId, q);
+        return ResponseEntity.ok()
+            .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"inventario.xlsx\"")
+            .contentType(MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"))
+            .body(excel);
     }
 
     @GetMapping("/listado-pdf")
