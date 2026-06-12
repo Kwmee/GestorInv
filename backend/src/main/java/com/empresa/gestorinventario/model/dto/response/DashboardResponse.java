@@ -17,6 +17,7 @@ public class DashboardResponse {
     private Long eventosActivos;
     private Long materialPendienteDevolucion;
     private List<EventoActivoInfo> eventosActivosDetalle;
+    private List<AlertaDevolucion> alertasDevolucion;
 
     @Data
     @Builder
@@ -25,6 +26,17 @@ public class DashboardResponse {
         private String nombre;
         private String cliente;
         private String fechaInicio;
+        private Long materialPendiente;
+    }
+
+    @Data
+    @Builder
+    public static class AlertaDevolucion {
+        private Long id;
+        private String nombre;
+        private String cliente;
+        private String fechaFin;
+        private Long diasRetraso;
         private Long materialPendiente;
     }
 }

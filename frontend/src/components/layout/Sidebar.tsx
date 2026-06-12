@@ -1,18 +1,26 @@
 import { NavLink, useNavigate } from 'react-router-dom'
 import {
   LayoutDashboard, Package, Users, CalendarDays,
-  FileText, LogOut, HardHat, Settings,
+  FileText, LogOut, HardHat, Settings, Wrench,
+  ReceiptText, BarChart3, Calendar,
 } from 'lucide-react'
 import clsx from 'clsx'
 import { useAuthStore } from '@/store/authStore'
 
-const nav = [
+const navPrincipal = [
   { to: '/',             label: 'Dashboard',    icono: LayoutDashboard },
   { to: '/eventos',      label: 'Eventos',      icono: CalendarDays },
+  { to: '/calendario',   label: 'Calendario',   icono: Calendar },
   { to: '/inventario',   label: 'Inventario',   icono: Package },
   { to: '/clientes',     label: 'Clientes',     icono: Users },
   { to: '/albaranes',    label: 'Albaranes',    icono: FileText },
   { to: '/trabajadores', label: 'Trabajadores', icono: HardHat },
+]
+
+const navGestion = [
+  { to: '/mantenimiento', label: 'Mantenimiento', icono: Wrench },
+  { to: '/presupuestos',  label: 'Presupuestos',  icono: ReceiptText },
+  { to: '/informes',      label: 'Informes',      icono: BarChart3 },
 ]
 
 function NavItem({ to, label, icono: Icono, end }: {
@@ -71,8 +79,15 @@ export function Sidebar() {
         <p className="px-3 mb-2 text-[10px] font-semibold tracking-widest uppercase text-zinc-400 dark:text-zinc-600">
           Menú
         </p>
-        {nav.map(({ to, label, icono }) => (
+        {navPrincipal.map(({ to, label, icono }) => (
           <NavItem key={to} to={to} label={label} icono={icono} end={to === '/'} />
+        ))}
+
+        <p className="px-3 pt-4 pb-2 text-[10px] font-semibold tracking-widest uppercase text-zinc-400 dark:text-zinc-600">
+          Gestión
+        </p>
+        {navGestion.map(({ to, label, icono }) => (
+          <NavItem key={to} to={to} label={label} icono={icono} />
         ))}
       </nav>
 

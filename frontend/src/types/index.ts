@@ -217,6 +217,14 @@ export interface DashboardResponse {
     fechaInicio: string
     materialPendiente: number
   }[]
+  alertasDevolucion: {
+    id: number
+    nombre: string
+    cliente: string
+    fechaFin: string
+    diasRetraso: number
+    materialPendiente: number
+  }[]
 }
 
 export interface AlbaranResponse {

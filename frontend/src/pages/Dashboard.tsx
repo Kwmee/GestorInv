@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 import { useNavigate } from 'react-router-dom'
-import { Package, Truck, CalendarDays, AlertCircle, ArrowRight } from 'lucide-react'
+import { Package, Truck, CalendarDays, AlertCircle, ArrowRight, AlertTriangle } from 'lucide-react'
 import { dashboardApi } from '@/api/dashboard.api'
 import { format } from 'date-fns'
 import { es } from 'date-fns/locale'
@@ -138,6 +138,46 @@ export function Dashboard() {
           </div>
         ))}
       </div>
+
+      {/* Alertas de devolución pendiente */}
+      {data.alertasDevolucion?.length > 0 && (
+        <div className="rounded-xl border border-red-200 dark:border-red-800 overflow-hidden"
+          style={{ background: 'var(--card)' }}>
+          <div className="px-5 py-3.5 border-b border-red-200 dark:border-red-800 flex items-center gap-2 bg-red-50 dark:bg-red-950/30">
+            <AlertTriangle className="h-4 w-4 text-red-500 shrink-0" />
+            <h3 className="text-sm font-semibold text-red-700 dark:text-red-400">
+              Devoluciones pendientes — {data.alertasDevolucion.length} evento{data.alertasDevolucion.length > 1 ? 's' : ''}
+            </h3>
+          </div>
+          <div className="divide-y divide-red-100 dark:divide-red-900/40">
+            {data.alertasDevolucion.map((a) => (
+              <button
+                key={a.id}
+                onClick={() => navigate(`/eventos/${a.id}`)}
+                className="w-full flex items-center justify-between px-5 py-3 hover:bg-red-50/50 dark:hover:bg-red-950/10 text-left transition-colors group"
+              >
+                <div className="min-w-0">
+                  <p className="text-sm font-medium text-zinc-900 dark:text-zinc-100 truncate">{a.nombre}</p>
+                  <p className="text-xs text-zinc-400 dark:text-zinc-500 mt-0.5">
+                    {a.cliente} · Fin previsto: {a.fechaFin}
+                  </p>
+                </div>
+                <div className="flex items-center gap-2 shrink-0 ml-4">
+                  {a.diasRetraso > 0 && (
+                    <span className="text-xs bg-red-100 text-red-700 border border-red-200 dark:bg-red-900/30 dark:text-red-400 dark:border-red-800 px-2 py-0.5 rounded font-medium tabular">
+                      +{a.diasRetraso}d
+                    </span>
+                  )}
+                  <span className="text-xs bg-amber-50 text-amber-700 border border-amber-200 dark:bg-amber-900/20 dark:text-amber-400 dark:border-amber-800 px-2 py-0.5 rounded font-medium tabular">
+                    {a.materialPendiente} pendientes
+                  </span>
+                  <ArrowRight className="h-3.5 w-3.5 text-zinc-300 dark:text-zinc-600 group-hover:text-zinc-500 transition-colors" />
+                </div>
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Eventos activos */}
       {data.eventosActivosDetalle.length > 0 && (

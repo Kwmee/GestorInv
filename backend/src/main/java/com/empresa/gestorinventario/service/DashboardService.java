@@ -10,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
@@ -51,6 +53,27 @@ public class DashboardService {
             })
             .toList();
 
+        LocalDateTime ahora = LocalDateTime.now();
+        List<DashboardResponse.AlertaDevolucion> alertas = eventoRepository
+            .findByEstado(EstadoEvento.DEVOLVIENDO).stream()
+            .map(e -> {
+                long pendientes = e.getLineas().stream()
+                    .filter(l -> l.getEstadoDevolucion().name().equals("PENDIENTE"))
+                    .count();
+                long diasRetraso = e.getFechaFin() != null
+                    ? Math.max(0, ChronoUnit.DAYS.between(e.getFechaFin(), ahora))
+                    : 0;
+                return DashboardResponse.AlertaDevolucion.builder()
+                    .id(e.getId())
+                    .nombre(e.getNombre())
+                    .cliente(e.getCliente().getRazonSocial())
+                    .fechaFin(e.getFechaFin() != null ? e.getFechaFin().format(FORMATO_FECHA) : "—")
+                    .diasRetraso(diasRetraso)
+                    .materialPendiente(pendientes)
+                    .build();
+            })
+            .toList();
+
         return DashboardResponse.builder()
             .totalMaterial(total)
             .disponible(disponible)
@@ -60,6 +83,7 @@ public class DashboardService {
             .eventosActivos(eventosActivos)
             .materialPendienteDevolucion(materialPendienteTotal)
             .eventosActivosDetalle(detalle)
+            .alertasDevolucion(alertas)
             .build();
     }
 }
