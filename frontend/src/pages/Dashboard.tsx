@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query'
 import { useNavigate } from 'react-router-dom'
 import { Package, Truck, CalendarDays, AlertCircle, ArrowRight } from 'lucide-react'
 import { dashboardApi } from '@/api/dashboard.api'
-import { format, parseISO } from 'date-fns'
+import { format } from 'date-fns'
 import { es } from 'date-fns/locale'
 import { useAuthStore } from '@/store/authStore'
 
@@ -166,7 +166,7 @@ export function Dashboard() {
                 <div className="min-w-0">
                   <p className="text-sm font-medium text-gray-900 dark:text-zinc-100 truncate">{e.nombre}</p>
                   <p className="text-xs text-gray-400 dark:text-zinc-500 mt-0.5">
-                    {e.cliente} · {format(parseISO(e.fechaInicio), "d MMM", { locale: es })}
+                    {e.cliente} · {e.fechaInicio}
                   </p>
                 </div>
                 <div className="flex items-center gap-3 shrink-0 ml-4">
