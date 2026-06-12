@@ -9,16 +9,16 @@ interface Props extends ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 const varianteClases = {
-  primario:   'bg-blue-700 hover:bg-blue-800 text-white border-transparent dark:bg-blue-600 dark:hover:bg-blue-700',
-  secundario: 'bg-white hover:bg-gray-50 text-gray-700 border-gray-300 dark:bg-zinc-800 dark:hover:bg-zinc-700 dark:text-zinc-200 dark:border-zinc-700',
+  primario:   'bg-zinc-900 hover:bg-zinc-800 text-white border-zinc-900 dark:bg-zinc-100 dark:hover:bg-white dark:text-zinc-900 dark:border-transparent',
+  secundario: 'bg-white hover:bg-gray-50 text-gray-700 border-gray-200 shadow-sm dark:bg-zinc-800 dark:hover:bg-zinc-700 dark:text-zinc-200 dark:border-zinc-700',
   peligro:    'bg-red-600 hover:bg-red-700 text-white border-transparent',
   fantasma:   'bg-transparent hover:bg-gray-100 text-gray-600 border-transparent dark:hover:bg-zinc-800 dark:text-zinc-300',
 }
 
 const tamanoClases = {
-  sm: 'px-3 py-1.5 text-sm',
-  md: 'px-4 py-2 text-sm',
-  lg: 'px-6 py-3 text-base',
+  sm: 'px-2.5 py-1.5 text-xs gap-1.5 h-7',
+  md: 'px-3.5 py-1.5 text-sm gap-2 h-8',
+  lg: 'px-5 py-2 text-sm gap-2 h-9',
 }
 
 export function Button({
@@ -34,16 +34,16 @@ export function Button({
     <button
       disabled={disabled || cargando}
       className={clsx(
-        'inline-flex items-center justify-center gap-2 rounded-md border font-medium',
-        'transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1',
-        'disabled:opacity-50 disabled:cursor-not-allowed',
+        'inline-flex items-center justify-center rounded-md border font-medium leading-none',
+        'transition-colors duration-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-zinc-500 focus-visible:ring-offset-1',
+        'disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap',
         varianteClases[variante],
         tamanoClases[tamano],
         className
       )}
       {...props}
     >
-      {cargando && <Loader2 className="h-4 w-4 animate-spin" />}
+      {cargando && <Loader2 className="h-3.5 w-3.5 animate-spin" />}
       {children}
     </button>
   )

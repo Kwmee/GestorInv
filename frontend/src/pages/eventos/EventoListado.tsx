@@ -1,22 +1,32 @@
 import { useState } from 'react'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { useNavigate } from 'react-router-dom'
-import { Plus, ChevronRight } from 'lucide-react'
+import { Plus, ChevronRight, CalendarDays } from 'lucide-react'
 import { eventoApi } from '@/api/evento.api'
 import { Button } from '@/components/ui/Button'
-import { Select } from '@/components/ui/Select'
 import { EstadoBadge } from '@/components/ui/EstadoBadge'
 import { Paginacion } from '@/components/ui/Paginacion'
 import { Modal } from '@/components/ui/Modal'
 import { EventoForm } from './EventoForm'
 import { format } from 'date-fns'
 import { es } from 'date-fns/locale'
+import type { EstadoEvento } from '@/types'
+
+const ESTADOS: { valor: EstadoEvento | ''; label: string }[] = [
+  { valor: '',            label: 'Todos' },
+  { valor: 'PLANIFICADO', label: 'Planificado' },
+  { valor: 'EN_CARGA',    label: 'Cargando' },
+  { valor: 'ACTIVO',      label: 'En ruta' },
+  { valor: 'DEVOLVIENDO', label: 'Devolviendo' },
+  { valor: 'FINALIZADO',  label: 'Finalizado' },
+  { valor: 'CANCELADO',   label: 'Cancelado' },
+]
 
 export function EventoListado() {
   const navigate = useNavigate()
   const queryClient = useQueryClient()
   const [pagina, setPagina] = useState(0)
-  const [estado, setEstado] = useState('')
+  const [estado, setEstado] = useState<EstadoEvento | ''>('')
   const [modalAbierto, setModalAbierto] = useState(false)
 
   const { data, isLoading } = useQuery({
@@ -24,96 +34,119 @@ export function EventoListado() {
     queryFn: () => eventoApi.listar({ page: pagina, estado: estado || undefined }),
   })
 
-  const formatFecha = (iso: string) =>
-    format(new Date(iso), "d MMM yyyy", { locale: es })
+  const formatFecha = (iso: string) => format(new Date(iso), "d MMM yyyy", { locale: es })
 
   return (
     <div className="space-y-5">
+      {/* Cabecera */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-zinc-100">Eventos</h2>
-          <p className="text-sm text-gray-500 dark:text-zinc-400 mt-0.5">
-            {data ? `${data.totalElementos} eventos` : ''}
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-zinc-100">Eventos</h1>
+          <p className="text-sm text-gray-400 dark:text-zinc-500 mt-0.5">
+            {data ? `${data.totalElementos} eventos registrados` : ''}
           </p>
         </div>
         <Button onClick={() => setModalAbierto(true)}>
-          <Plus className="h-4 w-4" />
+          <Plus className="h-3.5 w-3.5" />
           Nuevo evento
         </Button>
       </div>
 
-      <div className="bg-white dark:bg-zinc-900 rounded-xl border border-gray-100 dark:border-zinc-800 shadow-sm p-4 flex gap-3">
-        <Select
-          value={estado}
-          onChange={(e) => { setEstado(e.target.value); setPagina(0) }}
-          className="w-48"
-        >
-          <option value="">Todos los estados</option>
-          <option value="PLANIFICADO">Planificado</option>
-          <option value="ACTIVO">Activo</option>
-          <option value="FINALIZADO">Finalizado</option>
-          <option value="CANCELADO">Cancelado</option>
-        </Select>
+      {/* Filtro por estado — pill tabs */}
+      <div className="flex gap-1.5 flex-wrap">
+        {ESTADOS.map(({ valor, label }) => (
+          <button
+            key={valor}
+            onClick={() => { setEstado(valor); setPagina(0) }}
+            className={
+              estado === valor
+                ? 'px-3 py-1.5 rounded-md text-xs font-medium bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900'
+                : 'px-3 py-1.5 rounded-md text-xs font-medium bg-white text-gray-600 border border-gray-200 hover:border-gray-300 dark:bg-zinc-800 dark:text-zinc-400 dark:border-zinc-700 dark:hover:border-zinc-600 transition-colors'
+            }
+          >
+            {label}
+          </button>
+        ))}
       </div>
 
-      <div className="bg-white dark:bg-zinc-900 rounded-xl border border-gray-100 dark:border-zinc-800 shadow-sm overflow-hidden">
+      {/* Tabla */}
+      <div className="bg-white dark:bg-zinc-900 rounded-xl border border-gray-200 dark:border-zinc-800 overflow-hidden">
         {isLoading ? (
-          <div className="flex justify-center py-12">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-700" />
+          <div className="divide-y divide-gray-50 dark:divide-zinc-800">
+            {[...Array(5)].map((_, i) => (
+              <div key={i} className="flex items-center gap-4 px-5 py-3.5">
+                <div className="h-4 w-48 bg-gray-100 dark:bg-zinc-800 rounded animate-pulse" />
+                <div className="h-4 w-32 bg-gray-100 dark:bg-zinc-800 rounded animate-pulse" />
+                <div className="h-4 w-24 bg-gray-100 dark:bg-zinc-800 rounded animate-pulse ml-auto" />
+              </div>
+            ))}
           </div>
         ) : (
-          <table className="w-full text-sm">
-            <thead className="bg-gray-50 dark:bg-zinc-800 border-b border-gray-100 dark:border-zinc-700">
-              <tr>
-                <th className="px-4 py-3 text-left font-medium text-gray-600 dark:text-zinc-400">Evento</th>
-                <th className="px-4 py-3 text-left font-medium text-gray-600 dark:text-zinc-400">Cliente</th>
-                <th className="px-4 py-3 text-left font-medium text-gray-600 dark:text-zinc-400">Lugar</th>
-                <th className="px-4 py-3 text-left font-medium text-gray-600 dark:text-zinc-400">Fecha inicio</th>
-                <th className="px-4 py-3 text-left font-medium text-gray-600 dark:text-zinc-400">Material</th>
-                <th className="px-4 py-3 text-left font-medium text-gray-600 dark:text-zinc-400">Estado</th>
-                <th className="px-4 py-3" />
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-50 dark:divide-zinc-800">
-              {data?.contenido.length === 0 && (
-                <tr>
-                  <td colSpan={7} className="text-center py-10 text-gray-400 dark:text-zinc-500">
-                    No se encontraron eventos
-                  </td>
+          <>
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b border-gray-100 dark:border-zinc-800">
+                  <th className="px-5 py-3 text-left text-xs font-semibold text-gray-400 dark:text-zinc-500 uppercase tracking-wide">Evento</th>
+                  <th className="px-4 py-3 text-left text-xs font-semibold text-gray-400 dark:text-zinc-500 uppercase tracking-wide">Cliente</th>
+                  <th className="px-4 py-3 text-left text-xs font-semibold text-gray-400 dark:text-zinc-500 uppercase tracking-wide hidden md:table-cell">Lugar</th>
+                  <th className="px-4 py-3 text-left text-xs font-semibold text-gray-400 dark:text-zinc-500 uppercase tracking-wide hidden lg:table-cell">Fecha</th>
+                  <th className="px-4 py-3 text-center text-xs font-semibold text-gray-400 dark:text-zinc-500 uppercase tracking-wide hidden lg:table-cell">Material</th>
+                  <th className="px-4 py-3 text-left text-xs font-semibold text-gray-400 dark:text-zinc-500 uppercase tracking-wide">Estado</th>
+                  <th className="px-4 py-3 w-8" />
                 </tr>
-              )}
-              {data?.contenido.map((e) => (
-                <tr
-                  key={e.id}
-                  className="hover:bg-gray-50 dark:hover:bg-zinc-800 transition-colors cursor-pointer"
-                  onClick={() => navigate(`/eventos/${e.id}`)}
-                >
-                  <td className="px-4 py-3 font-medium text-gray-900 dark:text-zinc-100">{e.nombre}</td>
-                  <td className="px-4 py-3 text-gray-600 dark:text-zinc-400">{e.cliente.razonSocial}</td>
-                  <td className="px-4 py-3 text-gray-500 dark:text-zinc-500">{e.lugar ?? '—'}</td>
-                  <td className="px-4 py-3 text-gray-600 dark:text-zinc-400">{formatFecha(e.fechaInicio)}</td>
-                  <td className="px-4 py-3 text-gray-600 dark:text-zinc-400 text-center">
-                    <span className="bg-gray-100 dark:bg-zinc-800 text-gray-700 dark:text-zinc-400 px-2 py-0.5 rounded-full text-xs">
-                      {e.lineas.length} ítems
-                    </span>
-                  </td>
-                  <td className="px-4 py-3">
-                    <EstadoBadge estado={e.estado} />
-                  </td>
-                  <td className="px-4 py-3 text-gray-400 dark:text-zinc-600">
-                    <ChevronRight className="h-4 w-4" />
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        )}
-        {data && (
-          <Paginacion
-            paginaActual={data.paginaActual}
-            totalPaginas={data.totalPaginas}
-            onCambiar={setPagina}
-          />
+              </thead>
+              <tbody className="divide-y divide-gray-50 dark:divide-zinc-800/60">
+                {data?.contenido.length === 0 && (
+                  <tr>
+                    <td colSpan={7}>
+                      <div className="flex flex-col items-center py-14 text-center">
+                        <CalendarDays className="h-10 w-10 text-gray-200 dark:text-zinc-700 mb-3" />
+                        <p className="text-sm font-medium text-gray-400 dark:text-zinc-500">No se encontraron eventos</p>
+                        <p className="text-xs text-gray-300 dark:text-zinc-600 mt-1">Prueba a cambiar el filtro o crea uno nuevo</p>
+                      </div>
+                    </td>
+                  </tr>
+                )}
+                {data?.contenido.map((e) => (
+                  <tr
+                    key={e.id}
+                    className="hover:bg-gray-50 dark:hover:bg-zinc-800/40 transition-colors cursor-pointer group"
+                    onClick={() => navigate(`/eventos/${e.id}`)}
+                  >
+                    <td className="px-5 py-3">
+                      <p className="font-medium text-gray-900 dark:text-zinc-100">{e.nombre}</p>
+                    </td>
+                    <td className="px-4 py-3 text-gray-500 dark:text-zinc-400">{e.cliente.razonSocial}</td>
+                    <td className="px-4 py-3 text-gray-400 dark:text-zinc-500 hidden md:table-cell">{e.lugar ?? '—'}</td>
+                    <td className="px-4 py-3 text-gray-500 dark:text-zinc-400 hidden lg:table-cell font-mono text-xs">
+                      {formatFecha(e.fechaInicio)}
+                    </td>
+                    <td className="px-4 py-3 text-center hidden lg:table-cell">
+                      <span className="text-xs font-medium text-gray-500 dark:text-zinc-400 bg-gray-100 dark:bg-zinc-800 px-2 py-0.5 rounded">
+                        {e.lineas.length}
+                      </span>
+                    </td>
+                    <td className="px-4 py-3">
+                      <EstadoBadge estado={e.estado} />
+                    </td>
+                    <td className="px-4 py-3">
+                      <ChevronRight className="h-4 w-4 text-gray-300 dark:text-zinc-600 group-hover:text-gray-500 dark:group-hover:text-zinc-400 transition-colors" />
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+
+            {data && (
+              <div className="border-t border-gray-100 dark:border-zinc-800">
+                <Paginacion
+                  paginaActual={data.paginaActual}
+                  totalPaginas={data.totalPaginas}
+                  onCambiar={setPagina}
+                />
+              </div>
+            )}
+          </>
         )}
       </div>
 

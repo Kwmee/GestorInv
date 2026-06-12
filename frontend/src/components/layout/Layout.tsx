@@ -5,10 +5,10 @@ interface Props { children: ReactNode }
 
 export function Layout({ children }: Props) {
   return (
-    <div className="flex h-screen bg-gray-50 dark:bg-zinc-950">
+    <div className="flex h-screen bg-[#f5f4f2] dark:bg-[#09090b]">
       <Sidebar />
       <main className="flex-1 overflow-y-auto">
-        <div className="p-6 max-w-7xl mx-auto">
+        <div className="p-7 max-w-7xl mx-auto">
           {children}
         </div>
       </main>
