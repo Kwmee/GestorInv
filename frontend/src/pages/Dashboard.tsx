@@ -154,7 +154,7 @@ export function Dashboard() {
               <button
                 key={a.id}
                 onClick={() => navigate(`/eventos/${a.id}`)}
-                className="w-full flex items-center justify-between px-5 py-3 hover:bg-red-50/50 dark:hover:bg-red-950/10 text-left transition-colors group"
+                className="w-full flex items-center justify-between px-5 py-2 hover:bg-red-50/50 dark:hover:bg-red-950/10 text-left transition-colors group"
               >
                 <div className="min-w-0">
                   <p className="text-sm font-medium text-zinc-900 dark:text-zinc-100 truncate">{a.nombre}</p>
@@ -201,7 +201,7 @@ export function Dashboard() {
               <button
                 key={e.id}
                 onClick={() => navigate(`/eventos/${e.id}`)}
-                className="w-full flex items-center justify-between px-5 py-3 hover:bg-zinc-50 dark:hover:bg-zinc-800/50 text-left transition-colors group"
+                className="w-full flex items-center justify-between px-5 py-2 hover:bg-zinc-50 dark:hover:bg-zinc-800/50 text-left transition-colors group"
               >
                 <div className="min-w-0">
                   <p className="text-sm font-medium text-zinc-900 dark:text-zinc-100 truncate">{e.nombre}</p>
