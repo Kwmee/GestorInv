@@ -196,7 +196,7 @@ export function Dashboard() {
               Ver todos <ArrowRight className="h-3 w-3" />
             </button>
           </div>
-          <div className="divide-y" style={{ borderColor: 'var(--card-border)' }}>
+          <div className="divide-y divide-zinc-100 dark:divide-zinc-800/60">
             {data.eventosActivosDetalle.map((e) => (
               <button
                 key={e.id}
